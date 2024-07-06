@@ -1,0 +1,69 @@
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+        <div class="card">
+            <div class="card-body">
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                            aria-controls="home" aria-selected="true">Perfil</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="documentation-tab" data-toggle="tab" href="#documentation" role="tab"
+                            aria-controls="documentation" aria-selected="false">Documentación</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="d-flex flex-column align-items-center">
+                            <img src="/avatar/{{user.avatar}}" alt="Profile" class="rounded-circle mb-3 profile-img">
+                            <h3>{{user.fullname}}</h3>
+                        </div>
+                        <h5>Detalles:</h5>
+                        <div class="row py-2">
+                            <div class="col-lg-3 col-md-4 text-secondary">Email</div>
+                            <div class="col-lg-9 col-md-8">{{user.email}} </div>
+                        </div>
+                        <div class="row py-2">
+                            <div class="col-lg-3 col-md-4 text-secondary">Teléfono</div>
+                            <div class="col-lg-9 col-md-8">{{user.phone}} </div>
+                        </div>
+                        <div class="row py-2">
+                            <div class="col-lg-3 col-md-4 text-secondary">Dirección</div>
+                            <div class="col-lg-9 col-md-8">{{user.address}} </div>
+                        </div>
+                        <div class="row py-2">
+                            <div class="col-lg-3 col-md-4 text-secondary">Edad</div>
+                            <div class="col-lg-9 col-md-8">{{user.age}} </div>
+                        </div>
+                        <div class="row py-2">
+                            <div class="col-lg-3 col-md-4 text-secondary">Rol</div>
+                            <div class="col-lg-9 col-md-8">{{user.role}}</div>
+                        </div>
+                    </div>
+
+                    <!-- Sección de documentación -->
+                    <div class="tab-pane" id="documentation" role="tabpanel" aria-labelledby="documentation-tab">
+                        <div class="col-12 mt-3">
+                            <div class="font-weight-bold">
+                                <b>Documentación</b>
+                            </div>
+                            <form action="/api/users/upload/{{user.id}}" method="post" enctype="multipart/form-data"
+                                class="mb-3">
+                                <div class="form-group">
+                                    <label for="documentationFile">Selecciona el archivo de documentación</label>
+                                    <input type="file" class="form-control-file" id="documentationFile"
+                                        name="documentation" required>
+                                </div>
+                                <button type="submit" class="btn btn-success">Cargar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

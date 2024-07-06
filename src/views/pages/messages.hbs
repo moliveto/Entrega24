@@ -1,0 +1,77 @@
+<div class="row justify-content-center">
+    <div class="col-lg-3 order-md-1">
+        <h4>{{#if is_admin }}Responder{{else}}Preguntar{{/if}}:</h4>
+        <div class="card mb-3">
+            <div class="card-body">
+                {{#if is_admin}}
+                <form class="" action="/chat" method="post">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="forEmail" class="form-label">Para</label>
+                            <input type="text" placeholder="No se ha seleccionado un usuario" readonly class="form-control-plaintext" id="forEmail" name="forEmail" value="">
+                        </div>
+                        <div class="col-12">
+                            <label for="body" class="form-label">Mensaje</label>
+                            <textarea class="form-control" id="body" name="body" rows="10"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button class="w-100 btn btn-dark" type="submit">Mandar</button>
+                        </div>
+                    </div>
+                </form>
+                {{else}}
+                <form class="" action="/chat" method="post">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="body" class="form-label">Mensaje</label>
+                            <textarea class="form-control" id="body" name="body" rows="10"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button class="w-100 btn btn-dark" type="submit">Mandar</button>
+                        </div>
+                    </div>
+                </form>
+                {{/if}}
+            </div>
+        </div>
+        <a href="../chat">Chat grupal</a>
+    </div>
+    <div class="col-12 col-lg-9">
+        <h4>Mis mensajes, Chat:</h4>
+        {{#if messages}}
+            <div class="message-wrapper card {{#if is_admin}}message-admin{{/if}}">
+                <div class="card-body">
+                {{#each messages}}
+                    <div class="message {{#if this.is_system }}message-left{{else}}message-right{{/if}}">
+                        <div class="message-avatar" data-email="{{this.email}}">
+                            <i class="bi bi-person-circle"></i>
+                        </div>
+                        <div class="flex-shrink-1 message-body rounded py-2 px-3 mr-3">
+                            <div class="fw-semibold mb-1">{{#if this.is_system }}Para: {{else}}De: {{/if}}{{this.email}}</div> 
+                            {{this.body}}
+                            <div class="text-muted small text-nowrap mt-2">{{timeFormat 'lll' this.createdAt}}</div>
+                        </div>
+                    </div>
+                {{/each}}
+                </div>
+            </div>
+        {{else}}
+            <div class="alert alert-info" role="alert">
+                No hay mensajes para mostrar
+            </div>
+        {{/if}}
+    </div>
+</div>
+{{#if is_admin}}
+<script>
+    window.onload = function() {
+        const forEmailInput = document.getElementById('forEmail');
+        const messageSender = document.querySelectorAll('.message-right .message-avatar');
+        messageSender.forEach(snd => {
+            snd.addEventListener('click', function handleClick(event) {
+                forEmailInput.value = snd.dataset.email;
+            });
+        }); 
+    };
+</script>
+{{/if}}

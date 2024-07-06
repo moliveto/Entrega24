@@ -1,0 +1,106 @@
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-12">
+        <h4>Carritos:</h4>
+        <div class="text-end mb-3">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+                Añadir carrito
+            </button>
+        </div>
+        {{#if carts}}
+            <table class="table table-striped text-nowrap">
+                <thead>
+                    <tr class="table-dark">
+                        <th class="w-100">Id</th>
+                        <th class="">Id usuario</th>
+                        <th class="">Productos</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each carts}}
+                    <tr class="align-middle">
+                        <td class="">{{this.id}}</td>
+                        <td class="">{{this.userId}}</td>
+                        <td class="">
+                        {{#each this.products}}
+                            {{this.title}} </br>
+                        {{/each}}
+                        </td>
+                        <td class="text-end">
+                            <a class="btn btn-primary" href="../carritos/update/{{this.id}}" role="button"><i class="bi bi-pen"></i><span class="visually-hidden">Agregar productos</span></a>
+                            <span class="btn btn-danger delete-js" data-id="{{this.id}}" role="button" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="bi bi-trash"></i><span class="visually-hidden">Eliminar</span>
+                            </span>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        {{else}}
+            <div class="alert alert-info" role="alert">
+                No hay carritos para mostrar
+            </div>
+        {{/if}}
+    </div>
+</div>
+
+<div class="modal" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Crear carrito</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form class="" action="./view" method="post">
+        <div class="modal-body">
+            <div class="row g-3">
+                <div class="col-12">
+                    <label for="title" class="form-label">User ID</label>
+                    <input type="text" name="userId" id="userId" class="form-control" placeholder="">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <input type="submit" class="btn btn-primary" value="Crear carrito"></input>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Eliminar carrito</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form class="" action="../carritos/delete/" method="post">
+        <div class="modal-body">
+            <p>Deseas eliminar el carrito <strong id="delete-text"></strong>?</p>
+            <input id="id" name="id" type="hidden" value="">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <input type="submit" class="btn btn-danger" value="Eliminar"></input>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+    window.onload = function() {
+        const myModal = document.getElementById('deleteModal');
+        const deleteText = document.getElementById('delete-text');
+        const deleteId = document.getElementById('id');
+        const deleteBtns = document.querySelectorAll('.delete-js');
+        deleteBtns.forEach(btn => {
+            btn.addEventListener('click', function handleClick(event) {
+                deleteText.innerText = btn.dataset.id;
+                deleteId.value = btn.dataset.id;
+            });
+        }); 
+    };
+</script>

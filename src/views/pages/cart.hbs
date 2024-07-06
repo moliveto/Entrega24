@@ -1,0 +1,107 @@
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+        <h4>Mi carrito:</h4>
+
+        {{#if cart}}
+            {{#if products}}
+            <div class="text-end mb-3">
+                <form class="" action="../carrito/cleanCart/" method="post">
+                <input type="submit" class="btn btn-outline-dark" value="Vaciar carrito"></input>
+                </form>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-hover text-nowrap table-borderless mb-0">
+                        <thead>
+                            <tr class="">
+                                <th class="">Foto</th>
+                                <th class="w-100">Producto</th>
+                                <th class="">Cantidad</th>
+                                <th class="">Precio</th>
+                                <th class="">Total</th>
+                                <th class="text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each products}}
+                            <tr class="align-middle">
+                                <td class="text-center"><img src="{{this.product.thumbnail}}" alt="{{this.product.title}}" class="product-img"></td>
+                                <td class="">{{this.product.title}} <br> <span class="text-secondary">{{this.product.description}}</span>  </td>
+                                <td class="text-end">{{this.quantity}}</td>
+                                <td class="text-end">${{this.product.price}}</td>
+                                <td class="text-end fw-bold">${{this.total}}</td>
+                                <td class="text-center">
+                                    <form action="../carrito/removeProduct" method="POST">
+                                            <input type="hidden" name="pid" value="{{this.product.id}}" />
+                                            <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-x-lg"></i><span class="visually-hidden">Remover producto</span></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {{/each}}
+                            <tr class="align-middle table-light">
+                                <td class="" colspan="4">Total:</td>
+                                <td class="text-end">${{total}}</td>
+                                <td class="text-end">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="text-end mt-3">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#buyModal">
+                    Generar orden de compra
+                </button>
+            </div>
+            {{else}}
+                <div class="alert alert-info" role="alert">
+                    No hay productos para mostrar
+                </div>
+            {{/if}}
+        {{/if}}
+    </div>
+</div>
+
+
+<div class="modal" id="buyModal" tabindex="-1" aria-labelledby="buyModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="buyModalLabel">Generar orden</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form class="" action="../ordenes/make" method="post">
+        <div class="modal-body">
+            <p>Confirmar orden de compra:</p>
+            <table class="table table-sm table-borderless">
+                <tbody>
+                    <tr>
+                        <td class="text-secondary">Dirección:</td>
+                        <td>{{cart.delivery_address}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-secondary">Correo:</td>
+                        <td>{{cart.email}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-secondary">Total:</td>
+                        <td>${{total}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <input type="submit" class="btn btn-success" value="Comprar"></input>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+    window.onload = function() {
+
+    };
+</script>

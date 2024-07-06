@@ -1,0 +1,163 @@
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-12">
+        <h4>Productos:</h4>
+        {{#if is_admin}}
+        <div class="text-end mb-3">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+                Añadir producto
+            </button>
+        </div>
+        {{/if}}
+        {{#if products}}
+        <div class="card">
+            <div class="card-body table-responsive">
+                <table class="table table-hover text-nowrap table-borderless mb-0">
+                    <thead>
+                        <tr class="">
+                            <th class="text-center">Thumbnail</th>
+                            <th class="w-100">Nombre</th>
+                            <th class="">Descripción</th>
+                            <th class="text-end">Precio</th>
+                            <th class="text-end">Stock</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each products}}
+                        <tr class="align-middle">
+                            <td class="text-center"><img src="{{this.thumbnail}}" alt="{{this.name}}"
+                                    class="product-img"></td>
+                            <td class="">{{this.name}} <br> <span class="text-secondary">{{this.id}}</span> </td>
+                            <td class="">{{this.description}}</td>
+                            <td class="text-end">${{this.price}}</td>
+                            <td class="text-end">{{this.quantity}}</td>
+                            <td class="text-end">
+                                <div class="d-flex">
+                                    {{#if ../is_admin}}
+                                    <a class="btn btn-primary ms-1" href="../products/update/{{this.id}}"
+                                        role="button"><i class="bi bi-pen"></i><span
+                                            class="visually-hidden">Actualizar</span></a>
+                                    <span class="btn btn-danger delete-js ms-1" data-title="{{this.title}}"
+                                        data-id="{{this.id}}" role="button" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal">
+                                        <i class="bi bi-trash"></i><span class="visually-hidden">Eliminar</span>
+                                    </span>
+                                    {{else}}
+                                    <form action="../carrito/addProduct" method="POST" class="d-flex">
+                                        <select class="form-select me-1 quantity-select"
+                                            aria-label="cantidad de producto" name="quantity">
+                                            <option selected value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                        </select>
+                                        <input type="hidden" name="pid" value="{{this.id}}" />
+                                        <button class="btn btn-success" type="submit"><i
+                                                class="bi bi-bag-plus"></i><span
+                                                class="visually-hidden">Actualizar</span></button>
+                                    </form>
+                                    {{/if}}
+                                </div>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {{else}}
+        <div class="alert alert-info" role="alert">
+            No hay productos para mostrar
+        </div>
+        {{/if}}
+    </div>
+</div>
+
+<div class="botonera d-flex justify-content-between align-items-center">
+    {{#if hasPrevPage}}
+    <a href="/products?page={{prevPage}}" class="btn btn-primary me-3">Pagina previa</a>
+    {{/if}}
+
+    <h5 class="numeracion m-0">Pagina {{page}} de {{totalPages}}</h5>
+
+    {{#if hasNextPage}}
+    <a href="/products?page={{nextPage}}" class="btn btn-primary">Pagina siguiente</a>
+    {{/if}}
+</div>
+
+<div class="modal" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Agregar producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form class="" action="./products" method="post">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="name" class="form-label">Nombre</label>
+                            <input type="text" name="name" id="name" class="form-control" placeholder="">
+                        </div>
+                        <div class="col-12">
+                            <label for="description" class="form-label">Descripción</label>
+                            <input type="text" name="description" id="description" class="form-control" placeholder="">
+                        </div>
+                        <div class="col-12">
+                            <label for="price" class="form-label">Precio</label>
+                            <input type="text" name="price" id="price" class="form-control" placeholder="Ej. 3.50">
+                        </div>
+                        <div class="col-12">
+                            <label for="quantity" class="form-label">Stock</label>
+                            <input type="text" name="quantity" id="quantity" class="form-control"
+                                placeholder="Ej. 3.50">
+                        </div>
+                        <div class="col-12">
+                            <label for="thumbnail" class="form-label">Thumbnail</label>
+                            <input type="text" name="thumbnail" id="thumbnail" class="form-control" placeholder="url">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <input type="submit" class="btn btn-primary" value="Agregar producto"></input>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Eliminar producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form class="" action="../products/delete/" method="post">
+                <div class="modal-body">
+                    <p>Deseas eliminar el producto <strong id="delete-text"></strong>?</p>
+                    <input id="id" name="id" type="hidden" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <input type="submit" class="btn btn-danger" value="Eliminar"></input>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+        const myModal = document.getElementById('deleteModal');
+        const deleteText = document.getElementById('delete-text');
+        const deleteId = document.getElementById('id');
+        const deleteBtns = document.querySelectorAll('.delete-js');
+        deleteBtns.forEach(btn => {
+            btn.addEventListener('click', function handleClick(event) {
+                deleteText.innerText = btn.dataset.title;
+                deleteId.value = btn.dataset.id;
+            });
+        });
+    };
+</script>

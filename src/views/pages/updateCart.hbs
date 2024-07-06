@@ -1,0 +1,84 @@
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-4">
+        <h4>Actualizar carrito</h4>
+        <form class="mb-4" action="./" method="post">
+            <input id="id" name="id" type="hidden" value="{{cart.id}}">
+            <div class="row g-3">
+                <div class="col-12">
+                    <label for="pidCart" class="form-label">Producto</label>
+                    <select class="form-select" aria-label="producto" id="pidCart" name="pid">
+                        {{#each products}}
+                            <option value="{{this.id}}">{{this.title}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="col-12">
+                    <button class="w-100 btn btn-primary btn-lg" type="submit">Agregar producto al carrito</button>
+                </div>
+            </div>
+        </form>
+
+        {{#if cart.products}}
+            <table class="table table-striped text-nowrap">
+                <thead>
+                    <tr class="table-dark">
+                        <th class="w-100">Producto</th>
+                        <th class="text-center">Thumbnail</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each cart.products}}
+                    <tr class="align-middle">
+                        <td class="">{{this.title}}</td>
+                        <td class="text-center"><img src="{{this.thumbnail}}" alt="{{this.title}}"></td>
+                        <td class="text-end">
+                            <span class="btn btn-danger delete-js" data-id="{{this.id}}" data-title="{{this.title}}" role="button" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="bi bi-trash"></i><span class="visually-hidden">Eliminar</span>
+                            </span>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        {{/if}}
+
+    </div>
+</div>
+
+<div class="modal" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Eliminar producto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form class="" action="./delete/" method="post">
+        <div class="modal-body">
+            <p>Deseas eliminar el producto <strong id="delete-text"></strong>?</p>
+            <input id="id" name="id" type="hidden" value="{{cart.id}}">
+            <input id="pid" name="pid" type="hidden" value="">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <input type="submit" class="btn btn-danger" value="Eliminar"></input>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+    window.onload = function() {
+        const myModal = document.getElementById('deleteModal');
+        const deleteText = document.getElementById('delete-text');
+        const deleteId = document.getElementById('pid');
+        const deleteBtns = document.querySelectorAll('.delete-js');
+        deleteBtns.forEach(btn => {
+            btn.addEventListener('click', function handleClick(event) {
+                deleteText.innerText = btn.dataset.title;
+                deleteId.value = btn.dataset.id;
+            });
+        }); 
+    };
+</script>

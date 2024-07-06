@@ -1,0 +1,196 @@
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-12">
+        <h4>Usuarios:</h4>
+        {{#if is_admin}}
+        <div class="text-end mb-3">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+                Agregar Usuario
+            </button>
+        </div>
+        {{/if}}
+        {{#if users}}
+        <div class="card">
+            <div class="card-body table-responsive">
+                <table class="table table-hover text-nowrap table-borderless mb-0">
+                    <thead>
+                        <tr class="">
+                            <th class="text-center">Avatar</th>
+                            <th class="">Nombre</th>
+                            <th class="">Apellido</th>
+                            <th class="">Direccion</th>
+                            <th class="">Telefono</th>
+                            <th class="">Edad</th>
+                            <th class="">Email</th>
+                            <th class="">Doc</th>
+                            <th class="">Login</th>
+                            <th class="text-end">Rol</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each users}}
+                        <tr class="align-middle">
+                            <td>
+                                {{#if this.avatar}}
+                                <img src="./avatar/{{this.avatar}}" alt="Avatar" class="user-img">
+                                {{else}}
+                                <img src="./avatar/default-user.png" alt="Avatar" class="user-img">
+                                {{/if}}
+                            </td>
+                            <td class="">{{this.first_name}} </td>
+                            <td class="">{{this.last_name}}</td>
+                            <td class="">{{this.address}}</td>
+                            <td class="">{{this.phone}}</td>
+                            <td class="">{{this.age}}</td>
+                            <td class="">{{this.email}}</td>
+                            <td class="">
+                                {{#if this.haveDoc}}
+                                <svg class="bi bi-check-circle-fill" width="1em" height="1em" viewBox="0 0 16 16"
+                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM7.293 10.707a1 1 0 0 0 1.414 0l3.5-3.5a1 1 0 0 0-1.414-1.414L8 8.586 6.707 7.293a1 1 0 0 0-1.414 1.414l1.5 1.5z" />
+                                </svg>
+                                {{/if}}
+                            </td>
+                            <td class="">{{timeFormat 'lll' this.last_connection}}</td>
+                            <td class="text-end">{{this.role}}</td>
+                            <td class="text-end">
+                                <div class="d-flex">
+                                    {{#if ../is_admin}}
+                                    <a class="btn btn-primary ms-1" href="../users/update/{{this.id}}" role="button">
+                                        <i class="bi bi-pen"></i><span class="visually-hidden">Actualizar</span>
+                                    </a>
+                                    <span class="btn btn-danger delete-js ms-1" data-title="{{this.title}}"
+                                        data-id="{{this.id}}" role="button" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal">
+                                        <i class="bi bi-trash"></i><span class="visually-hidden">Eliminar</span>
+                                    </span>
+                                    {{/if}}
+                                </div>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        {{#if prevPage}}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{prevPage}}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {{/if}}
+                        {{#each pages}}
+                        <li class="page-item {{#if this.isCurrent}}active{{/if}}">
+                            <a class="page-link" href="?page={{this.number}}">{{this.number}}</a>
+                        </li>
+                        {{/each}}
+                        {{#if nextPage}}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{nextPage}}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        {{/if}}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {{else}}
+        <p>No hay usuarios para mostrar.</p>
+        {{/if}}
+    </div>
+</div>
+
+<!-- Modal para la alta de usuarios -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Alta de Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="userAddForm" action="./users" method="POST" class="">
+                    <div class="row gy-3">
+                        <div class="col-12">
+                            <label for="first_name" class="form-label">Nombre</label>
+                            <input type="text" name="first_name" id="first_name" class="form-control"
+                                placeholder="introduzca su nombre" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="last_name" class="form-label">Apellido</label>
+                            <input type="text" name="last_name" id="last_name" class="form-control"
+                                placeholder="introduzca su apellido" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="text" class="form-control" id="email" placeholder="ejemplo@dominio.com"
+                                name="email">
+                        </div>
+                        <div class="col-12">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input type="password" name="password" id="password" class="form-control"
+                                placeholder="introduzca su contraseña" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="phone" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="phone" placeholder="+54(351)7123 456"
+                                name="phone">
+                        </div>
+                        <div class="col-12">
+                            <label for="address" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="address" placeholder="Calle 123" name="address">
+                        </div>
+                        <div class="col-12">
+                            <label for="age" class="form-label">Edad</label>
+                            <input type="number" name="age" id="age" class="form-control"
+                                placeholder="introduzca su edad" min="0" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary" form="userAddForm">Guardar Usuario</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Eliminar usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form class="" action="../users/delete/" method="post">
+                <div class="modal-body">
+                    <p>Deseas eliminar el usuario <strong id="delete-text"></strong>?</p>
+                    <input id="id" name="id" type="hidden" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <input type="submit" class="btn btn-danger" value="Eliminar"></input>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+        const myModal = document.getElementById('deleteModal');
+        const deleteText = document.getElementById('delete-text');
+        const deleteId = document.getElementById('id');
+        const deleteBtns = document.querySelectorAll('.delete-js');
+        deleteBtns.forEach(btn => {
+            btn.addEventListener('click', function handleClick(event) {
+                deleteText.innerText = btn.dataset.title;
+                deleteId.value = btn.dataset.id;
+            });
+        });
+    };
+</script>

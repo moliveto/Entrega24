@@ -1,0 +1,77 @@
+<div class="min-vh-100 d-flex flex-column justify-content-center py-4">
+    <div class="row justify-content-center ">
+        <div class="col-md-6 col-lg-4">
+            <div class="">
+                {{#if errors}}
+                <div class="alert alert-warning">
+                    <strong>Algunos datos no presentan el formato requerido:</strong>
+                    <ul>
+                        {{#each errors}}
+                        <li>{{this.msg}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
+                {{/if}}
+
+                <div class="card">
+                    <div class="card-body">
+                        <form action="./" method="POST" class="">
+                            <input id="id" name="id" type="hidden" value="{{user._id}}">
+                            <h3 class="text-center mb-4">Actualizar Usuario</h3>
+                            <div class="row gy-3">
+                                <div class="col-12">
+                                    <label for="first_name" class="form-label">Nombre</label>
+                                    <input type="text" name="first_name" id="first_name" class="form-control"
+                                        placeholder="Introduzca su nombre" value="{{user.first_name}}" required>
+                                </div>
+                                <div class="col-12">
+                                    <label for="last_name" class="form-label">Apellido</label>
+                                    <input type="text" name="last_name" id="last_name" class="form-control"
+                                        placeholder="Introduzca su apellido" value="{{user.last_name}}" required>
+                                </div>
+                                <div class="col-12">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email"
+                                        placeholder="ejemplo@dominio.com" name="email" value="{{user.email}}">
+                                </div>
+                                <div class="col-12">
+                                    <label for="phone" class="form-label">Teléfono</label>
+                                    <input type="text" class="form-control" id="phone" placeholder="+54(351)7123 456"
+                                        value="{{user.phone}}" name="phone">
+                                </div>
+                                <div class="col-12">
+                                    <label for="address" class="form-label">Dirección</label>
+                                    <input type="text" class="form-control" id="address" placeholder="Calle 123"
+                                        value="{{user.address}}" name="address">
+                                </div>
+                                <div class="col-12">
+                                    <label for="age" class="form-label">Edad</label>
+                                    <input type="number" name="age" id="age" class="form-control" value="{{user.age}}"
+                                        placeholder="introduzca su edad" min="0" required>
+                                </div>
+                                <div class="col-12">
+                                    <label for="role" class="form-label">Rol</label>
+                                    <select class="form-select" name="role" id="role">
+                                        <option value="user" {{#ifEquals user.role 'user' }}selected{{/ifEquals}}>
+                                            Usuario</option>
+                                        <option value="admin" {{#ifEquals user.role 'admin' }}selected{{/ifEquals}}>
+                                            Administrador</option>
+                                        <option value="public" {{#ifEquals user.role 'public' }}selected{{/ifEquals}}>
+                                            Publico</option>
+                                        <option value="premium" {{#ifEquals user.role 'premium' }}selected{{/ifEquals}}>
+                                            Premium</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-grid">
+                                        <button class="btn btn-primary" type="submit">Actualizar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

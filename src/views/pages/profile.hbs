@@ -1,0 +1,80 @@
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+        <div class="card">
+            <div class="card-body">
+
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="profile-tab" data-bs-toggle="tab"
+                            data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane"
+                            aria-selected="true">Profile</button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="documentation-tab" data-bs-toggle="tab"
+                            data-bs-target="#documentation-tab-pane" type="button" role="tab"
+                            aria-controls="documentation-tab-pane" aria-selected="false">documentation</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="profile-tab-pane" role="tabpanel"
+                        aria-labelledby="profile-tab" tabindex="0">
+                        <div class="d-flex flex-column align-items-center">
+                            <img src="/avatar/{{user.avatar}}" alt="Profile" class="rounded-circle mb-3 profile-img">
+                            <h3>{{user.fullname}}</h3>
+                        </div>
+                        <h5>Detalles:</h5>
+                        <div class="row py-2">
+                            <div class="col-lg-3 col-md-4 text-secondary">Email</div>
+                            <div class="col-lg-9 col-md-8">{{user.email}} </div>
+                        </div>
+                        <div class="row py-2">
+                            <div class="col-lg-3 col-md-4 text-secondary">Teléfono</div>
+                            <div class="col-lg-9 col-md-8">{{user.phone}} </div>
+                        </div>
+                        <div class="row py-2">
+                            <div class="col-lg-3 col-md-4 text-secondary">Dirección</div>
+                            <div class="col-lg-9 col-md-8">{{user.address}} </div>
+                        </div>
+                        <div class="row py-2">
+                            <div class="col-lg-3 col-md-4 text-secondary">Edad</div>
+                            <div class="col-lg-9 col-md-8">{{user.age}} </div>
+                        </div>
+                        <div class="row py-2">
+                            <div class="col-lg-3 col-md-4 text-secondary">Rol</div>
+                            <div class="col-lg-9 col-md-8">{{user.role}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="documentation-tab-pane" role="tabpanel"
+                    aria-labelledby="documentation-tab" tabindex="0">
+                    <div class="col-12 mt-3">
+                        <div class="font-weight-bold">
+                            <b>Documentación</b>
+                        </div>
+                        <form action="/api/users/upload/{{user._id}}" method="post" enctype="multipart/form-data"
+                            class="mb-3">
+                            <div class="form-group">
+                                <label for="documentationFile">Selecciona el archivo de documentación</label>
+                                <input type="file" class="form-control-file" id="documentationFile" name="documentation"
+                                    required>
+                            </div>
+                            <button type="submit" class="btn btn-success">Cargar</button>
+                        </form>
+                    </div>
+                    <div class="col-12 mt-3">
+                        {{#each user.documents}}
+                        <div class="document-item">
+                            <img src="./{{this.reference}}" alt="{{this.name}}" class="document-img img-fluid" />
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</div>

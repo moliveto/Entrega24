@@ -1,0 +1,21 @@
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+        <h4>Información</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr class="table-dark">
+                    <th class="w-100">Variable</th>
+                    <th class="">Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each info}}
+                <tr>
+                    <td>{{@key}}</td>
+                    <td>{{this}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>

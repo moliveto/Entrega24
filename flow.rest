@@ -1,0 +1,79 @@
+@url = http://localhost:5000
+
+POST {{url}}/api/users  
+Content-Type: application/json
+
+{
+  "first_name": "Juan",
+  "last_name": "Perez",
+  "email": "juan@gmail.com",
+  "age": 53,
+  "role": "admin",
+  "password" : "12345"
+}
+###
+
+# @name register
+POST {{url}}/api/users  
+Content-Type: application/json
+
+{
+  "first_name": "Marcelo",
+  "last_name": "Oliveto",
+  "email": "marcelo.oliveto@gmail.com",
+  "age": 53,
+  "role": "admin",
+  "password" : "12345"
+}
+###
+
+# @name users
+GET {{url}}/api/users 
+###
+
+@firstUserId = {{users.response.body.payload.0._id}}
+
+GET {{url}}/api/users/{{firstUserId}}
+###
+
+GET {{url}}/api/users 
+###
+
+PUT {{url}}/api/users/{{firstUserId}}
+Content-Type: application/json
+
+{
+  "first_name": "Juan Ana",
+  "role": "premium"
+}
+###
+
+
+GET {{url}}/api/users 
+###
+
+DELETE {{url}}/api/users/{{firstUserId}}
+###
+
+
+POST {{url}}/api/products/
+Content-Type: application/json
+
+{
+  "name" : "Coca cola",
+  "description" : "Bebida cola",
+  "price" : 101.10,
+  "thumbnail" : "cocacola.jpg",
+  "code" : "cocacola",
+  "quantity" : 55,
+  "status": true
+}
+
+###
+# @name products
+GET {{url}}/api/products/
+
+@firstProductId = {{products.response.body.payload.0._id}}
+###
+
+GET {{url}}/api/products/seed

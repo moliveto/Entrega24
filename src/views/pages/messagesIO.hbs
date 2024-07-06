@@ -1,0 +1,69 @@
+<div class="row justify-content-center">
+    <div class="col-lg-3 order-md-1">
+        <h4>{{#if is_admin }}Responder{{else}}Preguntar{{/if}}:</h4>
+        <div class="card mb-3">
+            <div class="card-body">
+                {{#if is_admin}}
+                <form class="" action="/chat" method="post">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="forEmail" class="form-label">Para</label>
+                            <input type="text" placeholder="No se ha seleccionado un usuario" readonly class="form-control-plaintext" id="forEmail" name="forEmail" value="">
+                        </div>
+                        <div class="col-12">
+                            <label for="body" class="form-label">Mensaje</label>
+                            <textarea class="form-control" id="body" name="body" rows="10"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button class="w-100 btn btn-dark" type="submit">Mandar</button>
+                        </div>
+                    </div>
+                </form>
+                {{else}}
+                <form class="" action="/chat" method="post">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="body" class="form-label">Mensaje</label>
+                            <textarea class="form-control" id="body" name="body" rows="10"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button class="w-100 btn btn-dark" type="submit">Mandar</button>
+                        </div>
+                    </div>
+                </form>
+                {{/if}}
+            </div>
+        </div>
+        <a href="../chat/personal">Mis mensajes</a>
+    </div>
+    <div class="col-12 col-lg-9">
+        <h4>Chat:</h4>
+        <div class="message-wrapper card {{#if is_admin}}message-admin{{/if}}">
+            <div class="card-body" id="chat">
+                <div class="alert alert-info" role="alert">
+                    No hay mensajes para mostrar
+                </div>
+            </div>
+        </div>
+        <div class="mt-1  d-none">
+            Actualizando chat en <span id="counter"></span>
+        </div>
+    </div>
+</div>
+{{#if is_admin}}
+<script>
+    window.onload = function() {
+        const forEmailInput = document.getElementById('forEmail');
+        const chat = document.getElementById('chat');
+
+        chat.addEventListener('click', function (e) {
+            if (e.target.classList.contains('message-js')) {
+                forEmailInput.value = e.target.dataset.email;
+            }else if (e.target.classList.contains('bi') && e.target.parentNode.classList.contains('message-js')) {
+                forEmailInput.value = e.target.parentNode.dataset.email;
+            }
+
+        });
+    };
+</script>
+{{/if}}

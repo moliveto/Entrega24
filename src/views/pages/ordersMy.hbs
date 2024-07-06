@@ -1,0 +1,46 @@
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-6">
+        <h4>Mis órdenes de compra:</h4>
+        {{#if orders}}
+            {{#each orders}}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        Fecha y hora: {{timeFormat 'LLL' this.createdAt}} , Número de orden: {{this.order_number}}
+                        <table class="table table-hover text-nowrap table-borderless mb-0">
+                            <thead>
+                                <tr class="">
+                                    <th class="w-100">Nombre</th>
+                                    <th class="">Código</th>
+                                    <th class="text-end">Precio</th>
+                                    <th class="text-end">cantidad</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each products}}
+                                <tr class="align-middle">
+                                    <td class="">{{this.title}}</td>
+                                    <td class="">{{this.code}}</td>
+                                    <td class="text-end">${{this.price}}</td>
+                                    <td class="text-end">{{this.quantity}}</td>
+                                    <td class="text-end">{{this.total}}</td>
+                                </tr>
+                                {{/each}}
+                                <tr class="align-middle table-light">
+                                    <td class="" colspan="4">Total:</td>
+                                    <td class="text-end">${{total}}</td>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {{/each}}
+
+        {{else}}
+            <div class="alert alert-info" role="alert">
+                No hay ordenes para mostrar
+            </div>
+        {{/if}}
+    </div>
+</div>
