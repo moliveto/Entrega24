@@ -10,8 +10,8 @@ Documentar API.
 
 ## Uso
 
-1. Ejecuta `npm start` para iniciar la aplicación.
-2. Abre tu navegador y visita `http://localhost:3000`.
+1. Ejecuta `npm run start:dev` para iniciar la aplicación.
+2. Abre tu navegador y visita `http://localhost:5000/`.
 
 ## Contribución
 
