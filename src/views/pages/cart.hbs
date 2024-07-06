@@ -5,7 +5,7 @@
         {{#if cart}}
         {{#if products}}
         <div class="text-end mb-3">
-            <form class="" action="../carrito/cleanCart/" method="post">
+            <form class="" action="../cart/cleanCart/" method="post">
                 <input type="submit" class="btn btn-outline-dark" value="Vaciar carrito"></input>
             </form>
         </div>
@@ -26,20 +26,20 @@
                     <tbody>
                         {{#each products}}
                         <tr class="align-middle">
-                            <td class="text-center"><img src="{{this.product.thumbnail}}" alt="{{this.product.name}}"
+                            <td class="text-center"><img src="{{this.thumbnail}}" alt="{{this.name}}"
                                     class="product-img"></td>
                             <td class="w-80">
                                 <div class="d-flex flex-column">
-                                    <span class="fw-bold">{{this.product.name}}</span>
-                                    <span class="text-secondary text-wrap">{{this.product.description}}</span>
+                                    <span class="fw-bold">{{this.name}}</span>
+                                    <span class="text-secondary text-wrap">{{this.description}}</span>
                                 </div>
                             </td>
                             <td class="text-end">{{this.quantity}}</td>
-                            <td class="text-end">${{this.product.price}}</td>
+                            <td class="text-end">${{this.price}}</td>
                             <td class="text-end fw-bold">${{this.total}}</td>
                             <td class="text-center">
-                                <form action="../carts/removeProduct" method="POST">
-                                    <input type="hidden" name="pid" value="{{this.product.id}}" />
+                                <form action="../cart/removeProduct" method="POST">
+                                    <input type="hidden" name="pid" value="{{this.id}}" />
                                     <button class="btn btn-sm btn-outline-danger" type="submit"><i
                                             class="bi bi-x-lg"></i><span class="visually-hidden">Remover
                                             producto</span></button>
@@ -59,7 +59,7 @@
         </div>
         <div class="text-end mt-3">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#buyModal">
-                Generar orden de compra
+                Comprar
             </button>
         </div>
         {{else}}

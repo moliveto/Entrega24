@@ -13,4 +13,8 @@ export default class ProductRepository extends GenericRepository {
         return this.dao.addProductToCart(cartId, newCartProducts);
     }
 
+    removeProductFromCart = (cartId, productId) => {
+        return this.dao.removeProductFromCart(cartId, productId);
+    }
+    
 }

@@ -7,6 +7,6 @@ const router = Router();
 
 router.use("/", userRouter);
 router.use("/products", productRouter);
-router.use("/carts", cartRouter);
+router.use("/cart", cartRouter);
 
 export default router;

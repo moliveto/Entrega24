@@ -2,6 +2,39 @@ import { cartsService } from "../services/index.js";
 import { productsService } from "../services/index.js";
 import CartDTO from "../dto/cart.dto.js";
 
+const getCart = async (req, res) => {
+    const user = req.user;
+    res.locals.email = user.email;
+    res.locals.avatar = user.avatar;
+    res.locals.is_admin = user.role === 'admin';
+
+    let cart;
+    let products;
+    let total = 0;
+
+    if (req.user) {
+        const cartDB = await cartsService.getById(user.cart);
+        if (cartDB.status === 'error') {
+            req.flash('error', `No se encontró carrito con id: ${req.params.id}`);
+        }
+        else {
+            cart = new CartDTO(cartDB.data);
+            //console.log("🚀 ~ getCart ~ cart:", cart)
+            products = cart.products;
+            //console.log("🚀 ~ getCart ~ products:", products)
+            products.forEach((p, index) => {
+                total += p.price * p.quantity;
+            });
+        }
+    }
+    else {
+        req.flash('error', 'El ID es requerido');
+    }
+
+    // console.log("🚀 ~ getCart ~ products:", products)
+    res.render('pages/cart', { cart, products, total, notifications: req.flash() });
+}
+
 const addProductToCart = async (req, res) => {
     const { pid, quantity } = req.body;
     const cartId = req.user ? req.user.cart : null;
@@ -51,35 +84,47 @@ const addProductToCart = async (req, res) => {
     return res.redirect(`../products`);
 }
 
-const getCart = async (req, res) => {
-    let cart;
-    let products;
-    let total = 0;
+const removeProductFromCart = async (req, res) => {
+    const user = req.user;
+    res.locals.email = user.email;
+    res.locals.avatar = user.avatar;
+    res.locals.is_admin = user.role === 'admin';
 
-    if (req.user) {
-        const answer = await cartsService.getById(req.user.cart);
-        if (answer.status === 'error') {
-            req.flash('error', `No se encontró carrito con id: ${req.params.id}`);
-        }
-        else {
-            cart = new CartDTO(answer.data);
-            products = cart.products;
-            products.forEach((p, index) => {
-                total += p.product.price * p.quantity;
-            });
-
-            console.log("🚀 ~ getCart ~ cart:", cart)
-        }
-    } 
-    else 
-    {
-        req.flash('error', 'El ID es requerido');
+    const { pid } = req.body;
+    //console.log("🚀 ~ removeProductFromCart ~ pid:", pid)
+    const cartId = req.user ? req.user.cart : null;
+    //console.log("🚀 ~ removeProductFromCart ~ cartId:", cartId)
+    if (cartId && pid) {
+        const cartDB = await cartsService.removeProductFromCart(cartId, pid);
+        console.log("🚀 ~ removeProductFromCart ~ cartDB.message:", cartDB.message)
+        req.flash(cartDB.status, cartDB.message);
+    } else {
+        req.flash('error', 'El ID del producto y el carrito son necesarios.');
     }
 
-    res.render('pages/cart', { cart, products, total, notifications: req.flash() });
+    return res.redirect(`../cart`);
+}
+
+const cleanCart = async (req, res) => {
+    const user = req.user;
+    res.locals.email = user.email;
+    res.locals.avatar = user.avatar;
+    res.locals.is_admin = user.role === 'admin';
+
+    const cartId = req.user ? req.user.cart : null;
+    if (cartId) {
+        const cartDB = await cartsService.update(cartId, { products: [] });
+        req.flash(cartDB.status, 'Se vacio el carrito con exito');
+    } else {
+        req.flash('error', 'El ID del carrito es necesario.');
+    }
+
+    return res.redirect(`/cart`);
 }
 
 export default {
-    addProductToCart,
     getCart,
+    addProductToCart,
+    removeProductFromCart,
+    cleanCart
 }
