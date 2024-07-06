@@ -9,4 +9,8 @@ export default class ProductRepository extends GenericRepository {
         return this.getBy({ _id: id })
     }
 
+    addProductToCart = (cartId, newCartProducts) => {
+        return this.dao.addProductToCart(cartId, newCartProducts);
+    }
+
 }

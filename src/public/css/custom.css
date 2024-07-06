@@ -83,6 +83,9 @@ a {
 .quantity-select{
     width: 64px;
 }
+.quantity-input {
+    width: 64px;
+}
 
 .message-wrapper{
     display: flex;

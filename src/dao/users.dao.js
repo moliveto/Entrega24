@@ -1,6 +1,9 @@
 import userModel from "../models/users.model.js";
 
 export default class Users {
+    constructor() {
+        this.model = userModel;
+    }
 
     findOne = (id) => {
         return userModel.findOne({ _id: id });

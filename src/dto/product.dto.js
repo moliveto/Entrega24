@@ -1,6 +1,19 @@
 import { body } from "express-validator";
 import { mappingValidateMdw } from "../middleware/mapping-validation.middleware.js";
 
+export class ProductDTO{
+    constructor (product){
+        this.id = product._id || product.id
+        this.name = product.name
+        this.description = product.description
+        this.price = product.price
+        this.thumbnail = product.thumbnail
+        this.category = product.category
+        this.stock = product.stock
+        this.createdAt = product.createdAt
+    }
+}
+
 export const createProductDTO = [
     body("name").notEmpty().withMessage("Name is required"),
     body("description").notEmpty().withMessage("Description is required"),
@@ -9,11 +22,11 @@ export const createProductDTO = [
         .withMessage("Price is required")
         .isNumeric()
         .withMessage("Price must be a number"),
-    body("quantity")
+    body("stock")
         .notEmpty()
-        .withMessage("Quantity is required")
+        .withMessage("stock is required")
         .isNumeric()
-        .withMessage("Quantity must be a number"),
+        .withMessage("stock must be a number"),
     body("thumbnail")
         .optional()
         .isURL()

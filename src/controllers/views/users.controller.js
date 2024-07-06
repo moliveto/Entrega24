@@ -22,7 +22,7 @@ const logon = async (req, res) => {
         return res.redirect("/faillogin");
     }
 
-    const { first_name, last_name, email: emailDb, age, role, carts, address, phone, avatar, _id } = user;
+    const { first_name, last_name, email: emailDb, birthday, role, cart, address, phone, avatar, _id } = user;
 
     await usersService.updateLastConnection(_id, { last_connection: Date.now() });
 
@@ -30,12 +30,12 @@ const logon = async (req, res) => {
         first_name,
         last_name,
         email: emailDb,
-        age,
+        birthday,
         address,
         phone,
         avatar,
         role,
-        carts,
+        cart,
         id: _id
     });
 
@@ -68,10 +68,9 @@ const signon = async (req, res) => {
     if (file) {
         avatar = file.filename;
         req.body.avatar = avatar;
-        console.log("🚀 ~ signon ~ req.body:", req.body)
     }
 
-    const { first_name, last_name, email, age, address, phone } = req.body;
+    const { first_name, last_name, email, birthday, address, phone } = req.body;
     try {
         const user = await usersService.getUserByEmail(email);
         if (user) {
@@ -83,18 +82,18 @@ const signon = async (req, res) => {
         if (!newUser) {
             return res.redirect("/failSignup");
         }
-        const { role, carts, _id } = newUser;
+        const { role, cart, _id } = newUser;
 
         const token = await generateJWT({
             first_name,
             last_name,
             email,
-            age,
+            birthday,
             address,
             phone,
             avatar,
             role,
-            carts,
+            cart,
             id: _id
         });
 
@@ -165,7 +164,7 @@ const users = async (req, res) => {
                 email: doc.email,
                 address: doc.address,
                 phone: doc.phone,
-                age: doc.age,
+                birthday: doc.birthday,
                 haveDoc: doc.documents.length > 0,
                 last_connection: doc.last_connection,
                 avatar: doc.avatar,

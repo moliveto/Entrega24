@@ -1,7 +1,6 @@
 import express from 'express';
 import compression from "express-compression";
 import { engine, create } from "express-handlebars"
-// import { expressHbs }  from "express-handlebars";
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import flash from 'connect-flash';
@@ -31,7 +30,6 @@ const connection = mongoose.connect(MONGO_URI, {});
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 console.log(`dirname: ${__dirname}`);
 
 app.use(express.json());
@@ -59,21 +57,15 @@ app.use(
 
 initializePassport();
 app.use(passport.initialize());
-// app.use(function (req, res, next) {
-//   if (req.user) {
-//     console.log("🚀 ~ req.user:", req.user)
-//     res.locals.email = req.user.email;
-//     res.locals.avatar = req.user.avatar;
-//     res.locals.is_admin = req.user.role === 'admin';
-//   }
-//   next();
-// });
 
 const hbs = create({});
 hbs.handlebars.registerHelper('timeFormat', function (timeFormat, value) {
-  return moment(value).format(timeFormat);
+  return moment(value).format(timeFormat).trim();
 })
-hbs.handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
+hbs.handlebars.registerHelper('dateFormat', function (timeFormat, value) {
+  return moment(value).format(timeFormat).trim();
+})
+hbs.handlebars.registerHelper('ifEquals', function (arg1, arg2, options) {
   return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
 });
 
@@ -93,10 +85,6 @@ app.engine('hbs', engine({
 app.set('views', path.join(`${__dirname}/views`));
 app.set('view engine', 'hbs');
 app.use("/", indexRoutes);
-
-// app.engine("handlebars", engine())
-// app.set("views", path.join(`${__dirname}/views`))
-// app.set("view engine", "handlebars")
 
 app.use('/api/users', usersRouter);
 app.use('/api/products', productsRouter);

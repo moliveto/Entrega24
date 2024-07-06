@@ -2,6 +2,9 @@ import producModel from "../models/product.model.js";
 import { generateProduct } from "../seed/generate-products.js";
 
 export default class Products {
+    constructor() {
+        this.model = producModel;
+    }
 
     get = (params) => {
         return producModel.find(params);

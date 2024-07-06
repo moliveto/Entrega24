@@ -15,11 +15,11 @@
                     <thead>
                         <tr class="">
                             <th class="text-center">Thumbnail</th>
-                            <th class="w-100">Nombre</th>
-                            <th class="">Descripción</th>
+                            <th class="text-start">Nombre</th>
+                            <th class="w-80">Descripción</th>
                             <th class="text-end">Precio</th>
                             <th class="text-end">Stock</th>
-                            <th class="text-center">Acciones</th>
+                            <th class="w-10 text-center">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,7 +30,7 @@
                             <td class="">{{this.name}} <br> <span class="text-secondary">{{this.id}}</span> </td>
                             <td class="">{{this.description}}</td>
                             <td class="text-end">${{this.price}}</td>
-                            <td class="text-end">{{this.quantity}}</td>
+                            <td class="text-end">{{this.stock}}</td>
                             <td class="text-end">
                                 <div class="d-flex">
                                     {{#if ../is_admin}}
@@ -43,17 +43,15 @@
                                         <i class="bi bi-trash"></i><span class="visually-hidden">Eliminar</span>
                                     </span>
                                     {{else}}
-                                    <form action="../carrito/addProduct" method="POST" class="d-flex">
-                                        <select class="form-select me-1 quantity-select"
-                                            aria-label="cantidad de producto" name="quantity">
-                                            <option selected value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                        </select>
+                                    <form action="../carts/add" method="POST" class="d-flex">
                                         <input type="hidden" name="pid" value="{{this.id}}" />
-                                        <button class="btn btn-success" type="submit"><i
-                                                class="bi bi-bag-plus"></i><span
-                                                class="visually-hidden">Actualizar</span></button>
+                                        <input type="number" id="quantity-{{this.id}}"
+                                            class="form-control quantity-input" aria-label="cantidad de producto"
+                                            name="quantity" min="1" max="{{this.stock}}" value="1">
+                                        <button class="btn btn-success" type="submit">
+                                            <i class="bi bi-bag-plus"></i>
+                                            <span class="visually-hidden">Actualizar</span>
+                                        </button>
                                     </form>
                                     {{/if}}
                                 </div>
@@ -107,13 +105,19 @@
                             <input type="text" name="price" id="price" class="form-control" placeholder="Ej. 3.50">
                         </div>
                         <div class="col-12">
-                            <label for="quantity" class="form-label">Stock</label>
-                            <input type="text" name="quantity" id="quantity" class="form-control"
-                                placeholder="Ej. 3.50">
+                            <label for="stock" class="form-label">Stock</label>
+                            <input type="text" name="stock" id="stock" class="form-control" placeholder="Ej. 3.50">
                         </div>
                         <div class="col-12">
                             <label for="thumbnail" class="form-label">Thumbnail</label>
                             <input type="text" name="thumbnail" id="thumbnail" class="form-control" placeholder="url">
+                        </div>
+                        <div class="col-12">
+                            <label for="status" class="form-label">Estado</label>
+                            <div class="form-check">
+                                <label class="form-check-label" for="status">Activo</label>
+                                <input class="form-check-input" type="checkbox" name="status" id="status" checked>
+                            </div>
                         </div>
                     </div>
                 </div>

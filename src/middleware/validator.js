@@ -8,7 +8,7 @@ export const ValidateSignup = () => {
         body('password').isLength({ min: 5 }).withMessage('Password must be at least 5 characters long'),
         body('phone', 'Introduce tu teléfono').not().isEmpty().trim().isLength({ min: 10 }).withMessage('El teléfono debe contener al menos 10 dígitos, ejemplo: +123...'),
         body('address', 'Introduce una direccion para el envio de mercancia').not().isEmpty().trim(),
-        body('age', 'Introduce tu edad').not().isEmpty().trim().isNumeric().withMessage('Escribe tu edad en formato numérico'),
+        body('birthday', 'Introduce tu fecha de nacimiento').not().isEmpty().trim().isDate().withMessage('Escribe tu fecha de nacimiento en formato dd/mm/yyyy'),
     ];
 }
 
@@ -25,8 +25,8 @@ export const validateProduct = () => {
         body('price')
             .isFloat({ min: 0 }).withMessage('El precio debe ser un número positivo')
             .toFloat(),
-        body('quantity')
-            .isInt({ min: 0 }).withMessage('La cantidad debe ser un número entero positivo')
+        body('stock')
+            .isInt({ min: 0 }).withMessage('Stock debe ser un número entero positivo')
             .toInt(),
         body('thumbnail')
             .optional({ checkFalsy: true })

@@ -7,7 +7,7 @@ Content-Type: application/json
   "first_name": "Juan",
   "last_name": "Perez",
   "email": "juan@gmail.com",
-  "age": 53,
+  "birthday": '1990-01-01',
   "role": "admin",
   "password" : "12345"
 }
@@ -21,7 +21,7 @@ Content-Type: application/json
   "first_name": "Marcelo",
   "last_name": "Oliveto",
   "email": "marcelo.oliveto@gmail.com",
-  "age": 53,
+  "birthday": '1990-01-01',
   "role": "admin",
   "password" : "12345"
 }
@@ -65,7 +65,7 @@ Content-Type: application/json
   "price" : 101.10,
   "thumbnail" : "cocacola.jpg",
   "code" : "cocacola",
-  "quantity" : 55,
+  "stock" : 55,
   "status": true
 }
 

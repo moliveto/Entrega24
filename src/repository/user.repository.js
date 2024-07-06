@@ -9,8 +9,8 @@ export default class UserRepository extends GenericRepository {
 
     createUser = async (user) => {
         try {
-            const cart = await cartsService.create();
-            user.carts = { cart };
+            const newCart = await cartsService.create();
+            user.cart = newCart.id;
             return this.dao.save(user);
         } catch (error) {
             console.log("🚀 ~ UserRepository ~ createUser= ~ error:", error)

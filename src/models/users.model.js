@@ -40,13 +40,13 @@ const schema = new mongoose.Schema({
         minlength: 5,
         trim: true,
     },
-    age: {
-        type: Number,
+    birthday: {
+        type: Date,
         required: false,
     },
     role: {
         type: String,
-        enum: Object.values(roleType), // ['admin', 'public', 'user']
+        enum: Object.values(roleType),
         default: 'user',
     },
     phone: {
@@ -66,17 +66,10 @@ const schema = new mongoose.Schema({
         type: String,
         default: ''
     },
-    carts: {
-        type: [
-            {
-                cart: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: "carts",
-                },
-                _id: false,
-            },
-        ],
-        default: [],
+    cart: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'carts',
+        required: false,
     },
     documents: {
         type: [

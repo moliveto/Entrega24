@@ -45,9 +45,10 @@
                                         value="{{user.address}}" name="address">
                                 </div>
                                 <div class="col-12">
-                                    <label for="age" class="form-label">Edad</label>
-                                    <input type="number" name="age" id="age" class="form-control" value="{{user.age}}"
-                                        placeholder="introduzca su edad" min="0" required>
+                                    <label for="birthday" class="form-label">Fecha Nacimiento</label>
+                                    <input type="date" name="birthday" id="birthday" class="form-control"
+                                        placeholder="introduzca su fecha de nacimiento" value="{{dateFormat "
+                                        YYYY-MM-DD" user.birthday}}">
                                 </div>
                                 <div class="col-12">
                                     <label for="role" class="form-label">Rol</label>

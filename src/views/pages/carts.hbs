@@ -27,7 +27,7 @@
                         {{/each}}
                         </td>
                         <td class="text-end">
-                            <a class="btn btn-primary" href="../carritos/update/{{this.id}}" role="button"><i class="bi bi-pen"></i><span class="visually-hidden">Agregar productos</span></a>
+                            <a class="btn btn-primary" href="../carts/update/{{this.id}}" role="button"><i class="bi bi-pen"></i><span class="visually-hidden">Agregar productos</span></a>
                             <span class="btn btn-danger delete-js" data-id="{{this.id}}" role="button" data-bs-toggle="modal" data-bs-target="#deleteModal">
                                 <i class="bi bi-trash"></i><span class="visually-hidden">Eliminar</span>
                             </span>
@@ -76,7 +76,7 @@
         <h5 class="modal-title" id="deleteModalLabel">Eliminar carrito</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form class="" action="../carritos/delete/" method="post">
+      <form class="" action="../cats/delete/" method="post">
         <div class="modal-body">
             <p>Deseas eliminar el carrito <strong id="delete-text"></strong>?</p>
             <input id="id" name="id" type="hidden" value="">

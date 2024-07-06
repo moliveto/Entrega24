@@ -19,7 +19,7 @@ const schema = new mongoose.Schema({
     required: [true, 'El precio del producto es obligatorio'],
     min: [0, 'El precio no puede ser negativo']
   },
-  quantity: {
+  stock: {
     type: Number,
     required: [true, 'La cantidad del producto es obligatoria'],
     min: [0, 'La cantidad no puede ser negativa']
@@ -29,6 +29,10 @@ const schema = new mongoose.Schema({
     default: 'Sin imagen',
     trim: true,
     required: false 
+  },
+  category: { 
+    type: String, 
+    default: "comun"
   },
   status: {
     type: Boolean,

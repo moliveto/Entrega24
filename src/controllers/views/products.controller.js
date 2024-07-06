@@ -38,7 +38,8 @@ const products = async (req, res) => {
                 category: doc.category,
                 thumbnail: doc.thumbnail,
                 price: doc.price,
-                quantity: doc.quantity
+                stock: doc.stock,
+                status: doc.status
             }
         })
 
@@ -92,8 +93,8 @@ const updateProduct = async (req, res) => {
     res.locals.is_admin = user.role === 'admin';
     const productId = req.body.id;
     try {
-        const { name, description, price, quantity, thumbnail, status } = req.body;
-        const updateBody = { name, description, price, quantity, thumbnail, status: (status === 'on' ? true : false) };
+        const { name, description, price, stock, thumbnail, status } = req.body;
+        const updateBody = { name, description, price, stock, thumbnail, status: (status === 'on' ? true : false) };
         const result = await productsService.update(productId, updateBody);
         req.flash('success', `Producto actualizado con éxito`);
         res.redirect('/products');
@@ -129,8 +130,8 @@ const addProduct = async (req, res) => {
             req.flash('error', `Error al crear producto: ${errorsMsg}`);
             return res.redirect('/products');
         }
-        const { name, description, price, quantity, thumbnail, status } = req.body;
-        const newProduct = { name, description, price, quantity, thumbnail, status: (status === 'on' ? true : false) };
+        const { name, description, price, stock, thumbnail, status } = req.body;
+        const newProduct = { name, description, price, stock, thumbnail, status: (status === 'on' ? true : false) };
         const result = await productsService.create(newProduct);
         req.flash('success', `Producto creado con éxito`);
     } catch (error) {

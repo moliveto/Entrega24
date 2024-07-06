@@ -11,7 +11,6 @@ const schema = new Schema({
                     required: true
                 },
                 quantity: { type: Number, default: 1 },
-                closed: { type: Boolean, default: false },
                 _id: false,
             },
         ],
@@ -23,9 +22,11 @@ const schema = new Schema({
         strictPopulate: false, // Allows populating paths not specified in the schema
     });
 
+schema.plugin(mongoosePaginate);
+
 schema.pre('findOne', function () {
     this.populate('products.product')
-});
+})
 
 const collectionName = 'carts';
 const cartModel = model(collectionName, schema);

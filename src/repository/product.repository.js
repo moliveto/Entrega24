@@ -7,7 +7,7 @@ export default class ProductRepository extends GenericRepository {
     }
 
     getProductById = (id) => {
-        return this.getBy({ _id: id })
+        return this.getById(id);
     }
 
     seed = () => {

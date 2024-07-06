@@ -155,7 +155,7 @@ export default router;
  *         - name
  *         - description
  *         - price
- *         - quantity
+ *         - stock
  *         - thumbnail
  *         - status
  *       properties:
@@ -171,7 +171,7 @@ export default router;
  *         price:
  *           type: number
  *           description: The price of the product
- *         quantity:
+ *         stock:
  *           type: number
  *           description: The quantity of the product in stock
  *         thumbnail:

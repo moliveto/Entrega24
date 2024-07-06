@@ -1,6 +1,9 @@
 import cartModel from "../models/carts.model.js";
 
 export default class Carts {
+    constructor() {
+        this.model = cartModel;
+    }
 
     get = (params) => {
         return cartModel.find(params);
@@ -20,5 +23,14 @@ export default class Carts {
 
     delete = (id) => {
         return cartModel.findByIdAndDelete(id);
+    }
+
+    addProductToCart = async (id, newCartProducts) => {
+        try {
+            const result = await cartModel.updateOne({ _id: id }, { $set: { products: newCartProducts } });
+            return { status: 'success', message: `Producto agregado con exito al carrito. ${result}` };
+        } catch (error) {
+            return { status: 'error', message: `Error al agregar producto al carrito. ${error}` };
+        }
     }
 }
