@@ -43,16 +43,19 @@ const createOrder = async (req, res) => {
 
     // Calcular la suma de los productos que si se pueden comprar
     const total = productsInStock.reduce((acc, product) => {
-        return acc + product.product.price * product.quantity;
+        let subtotal = product.product.price * product.quantity;
+        product.price = product.product.price;
+        product.subtotal = subtotal;
+        return acc + subtotal;
     }, 0);
 
     // Generar el ticket
     const order = await ordersService.createOrder({
         user: user.id,
         products: productsInStock,
-        delivery_address : user.address,
-        email : user.email,
-        amount: total,
+        delivery_address: user.address,
+        email: user.email,
+        total: total,
     });
     // console.log("🚀 ~ createOrder ~ order:", order)
 
@@ -70,7 +73,7 @@ const getOrders = async (req, res) => {
     res.locals.is_admin = user.role === 'admin';
 
     const orders = await ordersService.getOrders();
-    console.log("🚀 ~ getOrders ~ orders:", orders)
+    // console.log("🚀 ~ getOrders ~ orders:", orders)
     res.render('pages/ordersAll', { orders: orders.data, notifications: req.flash() });
 }
 

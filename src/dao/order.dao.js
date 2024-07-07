@@ -6,7 +6,7 @@ export default class Orders {
   }
 
   get = (params) => {
-    console.log("🚀 ~ Orders ~ params:", params)
+    // console.log("🚀 ~ Orders ~ params:", params)
     return orderModel.find(params);
   }
 

@@ -14,7 +14,9 @@ const schema = new Schema({
                     ref: "products",
                     required: true
                 },
-                quantity: { type: Number, default: 1 },
+                quantity: { type: Number, default: 0 },
+                price : { type: Number, default: 0 },
+                subtotal: { type: Number, default: 0 }
             },
         ],
         default: [],
@@ -23,7 +25,8 @@ const schema = new Schema({
     email: { type: String, require: true },
     code: { type: String, require: true },
     datetime: { type: Date, default: Date.now, require: true },
-    amount : { type: Number, require: true }
+    total : { type: Number, require: true },
+    status: { type: String, default: 'Procesado', require: true },
 },
     {
         timestamps: true, // Automatically adds timestamps for created/updated at
