@@ -1,15 +1,23 @@
 import { Schema, model } from "mongoose";
 
 const schema = new Schema({
-    cart: {
-        type: Schema.Types.ObjectId,
-        ref: "carts",
-        required: true
-    },
     user: {
         type: Schema.Types.ObjectId,
         ref: "users",
         required: true
+    },
+    products: {
+        type: [
+            {
+                product: {
+                    type: Schema.Types.ObjectId,
+                    ref: "products",
+                    required: true
+                },
+                quantity: { type: Number, default: 1 },
+            },
+        ],
+        default: [],
     },
     delivery_address: { type: String, require: true },
     email: { type: String, require: true },
@@ -23,7 +31,7 @@ const schema = new Schema({
     });
 
 schema.pre('findOne', function () {
-    this.populate('carts.cart');
+    this.populate('products.product')
     this.populate('users.user');
 });
 

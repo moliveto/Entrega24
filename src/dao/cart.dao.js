@@ -43,7 +43,7 @@ export default class Carts {
                 { _id: cartObjectId },
                 { $pull: { products: { product: productObjectId } } }
             );
-            console.log("🚀 ~ Carts ~ removeProductFromCart= ~ result:", result)
+            // console.log("🚀 ~ Carts ~ removeProductFromCart= ~ result:", result)
 
             if (result.modifiedCount === 0) {
                 throw new Error("Product not found in the cart.");

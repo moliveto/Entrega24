@@ -1,6 +1,7 @@
 
 import { cartsService } from "../../services/index.js";
 import { ordersService } from "../../services/index.js";
+import { productsService } from "../../services/index.js";
 
 const createOrder = async (req, res) => {
     const user = req.user;
@@ -16,6 +17,7 @@ const createOrder = async (req, res) => {
         return res.redirect(`../../productos`);
     }
 
+    const cid = user.cart;
     const cart = cartDB.data;
     let productsOutOfStock = [];
     let productsInStock = [];
@@ -24,11 +26,10 @@ const createOrder = async (req, res) => {
         // Si el stock es mayor a la cantidad de productos que están en el carrito lo almacenamos en un array de productsInStock
         if (product.product.stock > product.quantity) {
             productsInStock.push(product);
-            // Quitamos el producto del carrtio
-            await deleteProductFromCart(cid, product.product._id);
+            // Quitamos el producto del cart
+            await cartsService.removeProductFromCart(cid, product.product._id);
             // Descontamos stock de los productos
-            await productService.updateProduct(product.product._id, { stock: product.product.stock - product.quantity });
-            await sumTotal(cid);
+            await productsService.update(product.product._id, { stock: product.product.stock - product.quantity });
         } else {
             productsOutOfStock.push(product);
         }
@@ -47,14 +48,15 @@ const createOrder = async (req, res) => {
 
     // Generar el ticket
     const order = await ordersService.createOrder({
-        user: user._id,
+        user: user.id,
         products: productsInStock,
         delivery_address : user.address,
         email : user.email,
         amount: total,
     });
+    console.log("🚀 ~ createOrder ~ order:", order)
 
-    res.redirect(`../../productos`);
+    res.redirect(`../../products`);
 }
 
 export default {
