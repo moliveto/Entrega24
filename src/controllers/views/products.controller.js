@@ -75,11 +75,13 @@ const getProductById = async (req, res) => {
     let product;
     const prodId = req.params.id;
     if (prodId) {
-        product = await productsService.getProductById(prodId);
+        const productDB = await productsService.getProductById(prodId);
+        product = productDB.data;
+        // console.log("🚀 ~ getProductById ~ product:", product)
         if (product.status === 'error') {
             req.flash('error', `No se encontró producto con id: ${prodId}`);
         }
-        product.id = product._id.toString();
+        // product.id = product.data.id;
     } else {
         req.flash('error', 'El ID es requerido');
     }

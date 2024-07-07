@@ -20,8 +20,27 @@ export default class GenericRepository {
         }
     }
 
-    getAll = (params) => {
-        return this.dao.get(params);
+    // getAll = (params) => {
+    //     console.log("🚀 ~ GenericRepository ~ params:", params)
+    //     return this.dao.get(params);
+    // }
+
+    getAll = async() => {
+        try {
+            const docs = await this.dao.model.find({}).lean().then(ds => {
+                if (ds.length) {
+                    return ds.map(d => {
+                        d.id = String(d._id);
+                        return d;
+                    });
+                }
+                return [];
+            });
+            return {status: 'success', message: 'Se obtuvieron de manera exitosa los datos.', data: docs}
+        } catch (err) {
+            errorLogger.error(`Error: ${err}`);
+            return { status: 'error', message: `Error al buscar registros: ${err}`}
+        }
     }
 
     getBy = (params) => {

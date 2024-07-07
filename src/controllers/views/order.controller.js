@@ -54,11 +54,27 @@ const createOrder = async (req, res) => {
         email : user.email,
         amount: total,
     });
-    console.log("🚀 ~ createOrder ~ order:", order)
+    // console.log("🚀 ~ createOrder ~ order:", order)
 
     res.redirect(`../../products`);
 }
 
+const getOrders = async (req, res) => {
+    const user = req.user;
+    if (!user) {
+        req.flash('error', 'El usuario no tiene una sesión activa');
+        return res.redirect(`../../productos`);
+    }
+    res.locals.email = user.email;
+    res.locals.avatar = user.avatar;
+    res.locals.is_admin = user.role === 'admin';
+
+    const orders = await ordersService.getOrders();
+    console.log("🚀 ~ getOrders ~ orders:", orders)
+    res.render('pages/ordersAll', { orders: orders.data, notifications: req.flash() });
+}
+
 export default {
+    getOrders,
     createOrder
 }
