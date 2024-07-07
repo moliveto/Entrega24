@@ -16,7 +16,7 @@ export default class GenericRepository {
         }
         catch (error) {
             errorLogger.error(`Error: ${error}`);
-            return { status: 'error', message: `Error al buscar registro con id ${id}. ${error}` }
+            return { status: 'error', message: `Error al buscar id ${id}. ${error}` }
         }
     }
 

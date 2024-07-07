@@ -1,8 +1,6 @@
 import { Schema, model } from "mongoose";
 
-const collection = "ticket";
-
-const ticketSchema = new Schema({
+const schema = new Schema({
     cart: {
         type: Schema.Types.ObjectId,
         ref: "carts",
@@ -13,11 +11,11 @@ const ticketSchema = new Schema({
         ref: "users",
         required: true
     },
-    amount: Number,
-    datetime: {
-        type: Date,
-        default: Date.now,
-    }
+    delivery_address: { type: String, require: true },
+    email: { type: String, require: true },
+    code: { type: String, require: true },
+    datetime: { type: Date, default: Date.now, require: true },
+    amount : { type: Number, require: true }
 },
     {
         timestamps: true, // Automatically adds timestamps for created/updated at
@@ -29,5 +27,7 @@ schema.pre('findOne', function () {
     this.populate('users.user');
 });
 
-const ticketModel = model(collection, ticketSchema);
+const collection = "orders";
+const ticketModel = model(collection, schema);
+
 export default ticketModel;

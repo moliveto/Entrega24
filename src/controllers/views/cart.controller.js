@@ -1,6 +1,6 @@
-import { cartsService } from "../services/index.js";
-import { productsService } from "../services/index.js";
-import CartDTO from "../dto/cart.dto.js";
+import { cartsService } from "../../services/index.js";
+import { productsService } from "../../services/index.js";
+import CartDTO from "../../dto/cart.dto.js";
 
 const getCart = async (req, res) => {
     const user = req.user;
