@@ -18,7 +18,7 @@ const getCart = async (req, res) => {
             req.flash('error', `No se encontró carrito con id: ${req.params.id}`);
         }
         else {
-            cart = new CartDTO(cartDB.data);
+            cart = new CartDTO(cartDB.data, user);
             //console.log("🚀 ~ getCart ~ cart:", cart)
             products = cart.products;
             //console.log("🚀 ~ getCart ~ products:", products)
@@ -91,12 +91,9 @@ const removeProductFromCart = async (req, res) => {
     res.locals.is_admin = user.role === 'admin';
 
     const { pid } = req.body;
-    //console.log("🚀 ~ removeProductFromCart ~ pid:", pid)
     const cartId = req.user ? req.user.cart : null;
-    //console.log("🚀 ~ removeProductFromCart ~ cartId:", cartId)
     if (cartId && pid) {
         const cartDB = await cartsService.removeProductFromCart(cartId, pid);
-        console.log("🚀 ~ removeProductFromCart ~ cartDB.message:", cartDB.message)
         req.flash(cartDB.status, cartDB.message);
     } else {
         req.flash('error', 'El ID del producto y el carrito son necesarios.');

@@ -132,6 +132,7 @@ const addProduct = async (req, res) => {
         }
         const { name, description, price, stock, thumbnail, status } = req.body;
         const newProduct = { name, description, price, stock, thumbnail, status: (status === 'on' ? true : false) };
+        newProduct.owner = req.user.id
         const result = await productsService.create(newProduct);
         req.flash('success', `Producto creado con éxito`);
     } catch (error) {

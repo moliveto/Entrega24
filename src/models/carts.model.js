@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, mongoose } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 
 const schema = new Schema({
@@ -14,7 +14,9 @@ const schema = new Schema({
             },
         ],
         default: [],
-    }
+    },
+    delivery_address: { type: String, require: true },
+    email: { type: String, require: true },
 },
     {
         timestamps: true, // Automatically adds timestamps for created/updated at

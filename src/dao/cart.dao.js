@@ -1,6 +1,5 @@
 import cartModel from "../models/carts.model.js";
 import mongoose from 'mongoose';
-import { ObjectId } from 'mongodb';
 
 export default class Carts {
     constructor() {

@@ -1,6 +1,6 @@
 import GenericRepository from "./generic.repository.js";
 
-export default class ProductRepository extends GenericRepository {
+export default class CartRepository extends GenericRepository {
     constructor(dao) {
         super(dao);
     }
@@ -16,5 +16,5 @@ export default class ProductRepository extends GenericRepository {
     removeProductFromCart = (cartId, productId) => {
         return this.dao.removeProductFromCart(cartId, productId);
     }
-    
+
 }

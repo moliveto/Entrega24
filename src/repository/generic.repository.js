@@ -10,13 +10,13 @@ export default class GenericRepository {
     }
 
     async getById(id) {
-        try { 
+        try {
             const doc = await this.dao.model.findById(id).lean();
-            return { status: 'success', message: 'Documento encontrado.', data: {id: doc._id, ...doc}}
-        } 
+            return { status: 'success', message: 'Documento encontrado.', data: { id: doc._id, ...doc } }
+        }
         catch (error) {
             errorLogger.error(`Error: ${error}`);
-            return { status: 'error', message: `Error al buscar registro con id ${id}. ${error}`}
+            return { status: 'error', message: `Error al buscar registro con id ${id}. ${error}` }
         }
     }
 
