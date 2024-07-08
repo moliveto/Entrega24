@@ -70,4 +70,4 @@ Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](https://
 
 ## API Workflow
 
-[src/workflow.rest](https://github.com/moliveto/Entrega24/blob/main/workflow.rest)
+[src/workflow.rest](https://github.com/moliveto/Entrega24/blob/main/flow.rest)
