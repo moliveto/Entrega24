@@ -1,3 +1,5 @@
+import { CLIENT_URL } from "./config.js";
+
 export const swaggerOpts = {
     definition: {
         openapi: "3.1.0",
@@ -12,13 +14,13 @@ export const swaggerOpts = {
             },
             contact: {
                 name: "Marcelo",
-                url: "http://localhost:5000",
+                url: `${CLIENT_URL}`,
                 email: "marcelo.oliveto@gmail.com",
             },
         },
         servers: [
             {
-                url: "http://localhost:5000",
+                url: `${CLIENT_URL}`,
             },
         ],
     },

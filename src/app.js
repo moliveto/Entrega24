@@ -19,7 +19,7 @@ import productsRouter from './routes/products.routes.js';
 import indexRoutes from './routes/view/index.routes.js';
 
 import initializePassport from "./config/pasport.config.js";
-import { PORT, PERSISTENCE, MONGO_URI } from "./config/config.js";
+import { PORT, PERSISTENCE, MONGO_URI, CLIENT_URL } from "./config/config.js";
 import { swaggerOpts } from "./config/swagger.config.js";
 
 import moment from 'moment';
@@ -37,8 +37,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    // origin: "http://localhost:5500",
-    origin: "*",
+    origin: `${CLIENT_URL}`,
+    // origin: "*",
     methods: ["GET", "PUT", "DELETE", "POST"],
   })
 );
