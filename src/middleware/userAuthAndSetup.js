@@ -7,7 +7,3 @@ export default function userAuthAndSetup(req, res, next) {
     }
     next();
 }
-
-// export default {
-//     userAuthAndSetup
-// }
