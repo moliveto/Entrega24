@@ -20,11 +20,6 @@ export default class GenericRepository {
         }
     }
 
-    // getAll = (params) => {
-    //     console.log("🚀 ~ GenericRepository ~ params:", params)
-    //     return this.dao.get(params);
-    // }
-
     getAll = async() => {
         try {
             const docs = await this.dao.model.find({}).lean().then(ds => {

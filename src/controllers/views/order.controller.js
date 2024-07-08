@@ -44,6 +44,8 @@ const createOrder = async (req, res) => {
     // Calcular la suma de los productos que si se pueden comprar
     const total = productsInStock.reduce((acc, product) => {
         let subtotal = product.product.price * product.quantity;
+        product.productId = product.product._id;
+        product.name = product.product.name;
         product.price = product.product.price;
         product.subtotal = subtotal;
         return acc + subtotal;
@@ -65,10 +67,17 @@ const createOrder = async (req, res) => {
 const getOrders = async (req, res) => {
     const orders = await ordersService.getOrders();
     // console.log("🚀 ~ getOrders ~ orders:", orders)
-    res.render('pages/ordersAll', { orders: orders.data, notifications: req.flash() });
+    res.render('pages/ordersAll.hbs', { orders: orders.data, notifications: req.flash() });
+}
+
+const getMyOrders = async (req, res) => {
+    const user = req.user;
+    const orders = await ordersService.getOrdersByUserId(user.id);
+    res.render('pages/ordersMy.hbs', { orders: orders, notifications: req.flash() });
 }
 
 export default {
+    getMyOrders,
     getOrders,
-    createOrder
+    createOrder,
 }

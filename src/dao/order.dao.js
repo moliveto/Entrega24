@@ -1,4 +1,5 @@
 import orderModel from "../models/order.model.js";
+import mongoose from 'mongoose';
 
 export default class Orders {
   constructor() {
@@ -6,15 +7,19 @@ export default class Orders {
   }
 
   get = (params) => {
-    // console.log("🚀 ~ Orders ~ params:", params)
-    return orderModel.find(params);
+    return this.model.find(params);
+  }
+
+  getOrdersByUserId = async (userId) => {
+    const orders = await this.model.find({ user: new mongoose.Types.ObjectId(userId) }).lean();
+    return orders;
   }
 
   getBy = (params) => {
-    return orderModel.findOne(params);
+    return this.model.findOne(params);
   }
 
   save = (doc) => {
-    return orderModel.create(doc);
+    return this.model.create(doc);
   }
 }

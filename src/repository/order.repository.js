@@ -13,12 +13,16 @@ export default class OrderRepository extends GenericRepository {
         return this.getAll();
     }
 
+    getOrdersByUserId = async (userId) => {
+        return await this.dao.getOrdersByUserId(userId);
+    }
+
     createOrder = (order) => {
         const newOrder = {
             ...order,
             code: Math.random().toString(36).substr(2, 9),
             purchase_datetime: new Date(),
-          };
+        };
 
         return this.create(newOrder);
     }

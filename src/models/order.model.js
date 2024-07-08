@@ -9,11 +9,8 @@ const schema = new Schema({
     products: {
         type: [
             {
-                product: {
-                    type: Schema.Types.ObjectId,
-                    ref: "products",
-                    required: true
-                },
+                productId : { type: String, require: true},
+                name: { type: String, require: true },
                 quantity: { type: Number, default: 0 },
                 price : { type: Number, default: 0 },
                 subtotal: { type: Number, default: 0 }

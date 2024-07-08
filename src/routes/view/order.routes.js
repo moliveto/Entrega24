@@ -5,6 +5,7 @@ import userAuthAndSetup from '../../middleware/userAuthAndSetup.js';
 
 const router = Router();
 
+router.get('/',handlePolicies(["public", "user", "admin", "premium"]), userAuthAndSetup, orderController.getMyOrders);
 router.get('/admin', handlePolicies(["admin"]), userAuthAndSetup, orderController.getOrders);
 router.post('/create', handlePolicies(["public", "user", "admin", "premium"]), userAuthAndSetup, orderController.createOrder);
 
