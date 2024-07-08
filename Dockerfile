@@ -15,7 +15,7 @@ COPY . .
 RUN npm install
 
 # configurando la variable de entorno NODE_ENV
-ENV NODE_ENV=production
+ENV NODE_ENV=dev
 
 # exponemos el puerto del contenedor usando el puerto 6000
 EXPOSE 6000
