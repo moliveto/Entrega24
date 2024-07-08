@@ -49,6 +49,11 @@
 4. Regístrate en el sitio.
 5. La documentación de Swagger se encuentra en `http://localhost:5000/docs`.
 
+## Preview
+
+Puedes ver el proyecto desplegado en el siguiente link:
+[https://entrega24-production.up.railway.app/](https://entrega24-production.up.railway.app/)
+
 ## Contribución
 
 Si deseas contribuir a este proyecto, sigue estos pasos:
