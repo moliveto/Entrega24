@@ -11,30 +11,27 @@ Entrega de Proyecto Final
 
 1. Ejecuta `npm run start:dev` para iniciar la aplicación.
 2. Crea un archivo local .env.dev.local con el siguiente contenido:
-
+''
 ENV=dev
 
-# App configuration
 PORT=5000
 CLIENT_URL=http://localhost:5000
 
-# Database configuration
 PERSISTENCE=MONGO
 DB_HOST=localhost
 DB_PORT=27017
 DB_NAME=entrega23
 
-# API configuration
 API_KEY=yourapikey
 API_SECRET=yoursecretkey
 
-# JWT configuration
 JWT_SECRET=jwtsecret
 JWT_RESET_EXPIRE_IN=1h
 JWT_EXPIRE_IN=1h
 
 GOOGLE_APP_EMAIL=tu.email@gmail.com
 GOOGLE_APP_PW=abcd abcd abcd abcd
+''
 
 3. Abre tu navegador y visita `CLIENT_URL`.
 4. Registrate en el sitio
