@@ -4,9 +4,10 @@ import CartDTO from "../../dto/cart.dto.js";
 
 const getCart = async (req, res) => {
     const user = req.user;
-    res.locals.email = user.email;
-    res.locals.avatar = user.avatar;
-    res.locals.is_admin = user.role === 'admin';
+    if (!user) {
+        req.flash('error', 'El usuario no está logueado');
+        return res.redirect('/');
+    }
 
     let cart;
     let products;
@@ -85,11 +86,6 @@ const addProductToCart = async (req, res) => {
 }
 
 const removeProductFromCart = async (req, res) => {
-    const user = req.user;
-    res.locals.email = user.email;
-    res.locals.avatar = user.avatar;
-    res.locals.is_admin = user.role === 'admin';
-
     const { pid } = req.body;
     const cartId = req.user ? req.user.cart : null;
     if (cartId && pid) {
@@ -103,11 +99,6 @@ const removeProductFromCart = async (req, res) => {
 }
 
 const cleanCart = async (req, res) => {
-    const user = req.user;
-    res.locals.email = user.email;
-    res.locals.avatar = user.avatar;
-    res.locals.is_admin = user.role === 'admin';
-
     const cartId = req.user ? req.user.cart : null;
     if (cartId) {
         const cartDB = await cartsService.update(cartId, { products: [] });

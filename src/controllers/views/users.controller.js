@@ -122,18 +122,12 @@ const updatepassword = async (req, res) => {
 const profileUser = async (req, res) => {
     const { email } = req.user;
     const user = await usersService.getUserByEmail(email);
-    res.locals.email = user.email;
-    res.locals.avatar = user.avatar;
-    res.locals.is_admin = user.role === 'admin';
     const error = req.flash('error');
     res.render("pages/profile.hbs", { user, error, notifications: req.flash() });
 };
 
 const users = async (req, res) => {
     const user = req.user;
-    res.locals.email = user.email;
-    res.locals.avatar = user.avatar;
-    res.locals.is_admin = user.role === 'admin';
     const is_admin = user.role === 'admin';
 
     const { page = 1, limit = 10, sort, filter } = req.query;

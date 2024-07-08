@@ -4,10 +4,6 @@ import { validationResult } from 'express-validator';
 
 const products = async (req, res) => {
     const user = req.user;
-    res.locals.email = user.email;
-    res.locals.avatar = user.avatar;
-    res.locals.is_admin = user.role === 'admin';
-
     const cartId = user.carts;
     const is_admin = user.role === 'admin';
 
@@ -68,10 +64,6 @@ const products = async (req, res) => {
 };
 
 const getProductById = async (req, res) => {
-    const user = req.user;
-    res.locals.email = user.email;
-    res.locals.avatar = user.avatar;
-    res.locals.is_admin = user.role === 'admin';
     let product;
     const prodId = req.params.id;
     if (prodId) {
@@ -89,10 +81,6 @@ const getProductById = async (req, res) => {
 }
 
 const updateProduct = async (req, res) => {
-    const user = req.user;
-    res.locals.email = user.email;
-    res.locals.avatar = user.avatar;
-    res.locals.is_admin = user.role === 'admin';
     const productId = req.body.id;
     try {
         const { name, description, price, stock, thumbnail, status } = req.body;
@@ -106,10 +94,6 @@ const updateProduct = async (req, res) => {
 }
 
 const deleteProductAndRedirect = async (req, res) => {
-    const user = req.user;
-    res.locals.email = user.email;
-    res.locals.avatar = user.avatar;
-    res.locals.is_admin = user.role === 'admin';
     const { id } = req.body;
     try {
         const result = await productsService.delete(id);
@@ -121,10 +105,6 @@ const deleteProductAndRedirect = async (req, res) => {
 }
 
 const addProduct = async (req, res) => {
-    const user = req.user;
-    res.locals.email = user.email;
-    res.locals.avatar = user.avatar;
-    res.locals.is_admin = user.role === 'admin';
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
