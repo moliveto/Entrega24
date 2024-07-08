@@ -141,7 +141,7 @@ router.delete('/:uid', productMdwPremium, productsController.deleteProduct);
  *       500:
  *         description: Error occurred while seeding the database
  */
-router.get('/seed', productsController.Seed);
+router.get('/seed', handlePolicies(['admin']), productsController.Seed);
 
 export default router;
 

@@ -54,5 +54,5 @@ export default {
     getProduct,
     updateProduct,
     deleteProduct,
-    Seed: Seed
+    Seed
 }

@@ -46,7 +46,7 @@ const createUser = async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             const errorsMsg = errors.array().map(err => err.msg).join(', ');
-            console.log("🚀 ~ createUser ~ errorsMsg:", errorsMsg)
+            // console.log("🚀 ~ createUser ~ errorsMsg:", errorsMsg)
             req.flash('error', `Error al crear usuario: ${errorsMsg}`);
             res.status(404).send({ status: "error", error: `Error al crear usuario: ${errorsMsg}` })
         }

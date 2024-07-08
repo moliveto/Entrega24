@@ -11,6 +11,7 @@ const {
     DB_HOST,
     DB_PORT,
     DB_NAME,
+    DB_URI,
 
     JWT_SECRET,
     JWT_EXPIRE_IN,
@@ -23,7 +24,20 @@ const {
     TWILIO_AUTH_TOKEN,
 } = process.env;
 
-const MONGO_URI = `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`;
+if (!NODE_ENV) {
+    throw new Error("NODE_ENV is not defined");
+}
+
+let MONGO_URI = null;
+if (DB_URI) {
+    MONGO_URI = DB_URI;
+}
+else {
+    const DB_HOST_ENV = DB_HOST || "localhost";
+    const DB_PORT_ENV = DB_PORT || "27017";
+    const DB_NAME_ENV = DB_NAME || "entrega23";
+    MONGO_URI = `mongodb://${DB_HOST_ENV}:${DB_PORT_ENV}/${DB_NAME_ENV}`;
+}
 
 export {
     NODE_ENV,

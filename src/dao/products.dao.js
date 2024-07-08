@@ -29,7 +29,7 @@ export default class Products {
     seed = async () =>{
         try {
             let products = [];
-            const MAX_Products = 200;
+            const MAX_Products = 1000;
             for (let index = 0; index < MAX_Products; index++) {
                 let product = generateProduct();
                 console.log("🚀 ~ Products ~ Seed ~ product:", product)
