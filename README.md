@@ -66,4 +66,8 @@ Si deseas contribuir a este proyecto, sigue estos pasos:
 
 ## Licencia
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
+Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](https://raw.githubusercontent.com/git/git-scm.com/main/MIT-LICENSE.txt) para más detalles.
+
+## API Workflow
+
+[src/workflow.rest](https://github.com/moliveto/Entrega24/blob/main/workflow.rest)
