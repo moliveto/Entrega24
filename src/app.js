@@ -1,4 +1,5 @@
 import express from 'express';
+import { Server as IO } from "socket.io";
 import compression from "express-compression";
 import { engine, create } from "express-handlebars"
 import mongoose from 'mongoose';
@@ -98,4 +99,22 @@ app.use('*', (req, res) => {
 const httpServer = app.listen(PORT, () => {
   displayRoutes(app);
   console.log(`Listening on ${PORT}, enviroment: ${process.env.NODE_ENV} persistence: ${PERSISTENCE}`);
+});
+httpServer.on('error', () => console.log(`Error: ${err}`));
+
+// Socket
+const io = new IO(httpServer);
+const messages = [];
+io.on('connection', socket => {
+    console.log("Nuevo cliente conectado: ", socket.id);
+
+    socket.on("message", (data) => {
+        messages.unshift(data);
+        io.emit("messageLogs", messages);
+    });
+
+    socket.on("user-login", (usr) => {
+        socket.emit("messageLogs", messages)
+        socket.broadcast.emit("new-user", usr)
+    });
 });
