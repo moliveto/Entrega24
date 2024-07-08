@@ -8,7 +8,7 @@ import userAuthAndSetup from '../../middleware/userAuthAndSetup.js';
 const router = Router();
 
 // Login
-router.get('/', userController.login);
+router.get('/', userAuthAndSetup, userController.login);
 router.get('/users', handlePolicies(["admin"]), userAuthAndSetup, userController.users);
 router.post('/users', handlePolicies(["admin"]), userAuthAndSetup, userController.createUser);
 router.get('/users/update/:id', handlePolicies(["admin"]), userAuthAndSetup, userController.getUserById);
@@ -18,18 +18,18 @@ router.post("/login", userController.logon);
 router.get('/faillogin', userController.failLogin);
 
 // Signup
-router.get('/signup', userController.signup);
-router.post('/signup', uploaderAvatar.single('avatar'), ValidateSignup(), userController.signon);
-router.get('/failSignup', userController.failSignup);
+router.get('/signup', userAuthAndSetup, userController.signup);
+router.post('/signup', userAuthAndSetup, uploaderAvatar.single('avatar'), ValidateSignup(), userController.signon);
+router.get('/failSignup', userAuthAndSetup, userController.failSignup);
 
 // Logout
-router.get('/logout', userController.logout);
+router.get('/logout', userAuthAndSetup, userController.logout);
 
 // Profile
 router.get("/profile", handlePolicies(["public", "user", "admin", "premium"]),userAuthAndSetup, userController.profileUser);
 
 // Forgot
-router.get('/forgot', userController.forgot);
-router.get('/updatepassword/:token', userController.updatepassword);
+router.get('/forgot', userAuthAndSetup, userController.forgot);
+router.get('/updatepassword/:token', userAuthAndSetup, userController.updatepassword);
 
 export default router;

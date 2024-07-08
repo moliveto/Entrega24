@@ -10,32 +10,32 @@ Entrega de Proyecto Final
 ## Uso
 
 1. Ejecuta `npm run start:dev` para iniciar la aplicación.
-2. Crea un archivo local .env.dev.local con el siguiente contenido:
-''
-ENV=dev
+2. Crea un archivo local `.env.dev.local` con el siguiente contenido:
 
-PORT=5000
-CLIENT_URL=http://localhost:5000
+    ```env
+    ENV=dev
+    PORT=5000
+    CLIENT_URL=http://localhost:5000
 
-PERSISTENCE=MONGO
-DB_HOST=localhost
-DB_PORT=27017
-DB_NAME=entrega23
+    PERSISTENCE=MONGO
+    DB_HOST=localhost
+    DB_PORT=27017
+    DB_NAME=entrega23
 
-API_KEY=yourapikey
-API_SECRET=yoursecretkey
+    API_KEY=yourapikey
+    API_SECRET=yoursecretkey
 
-JWT_SECRET=jwtsecret
-JWT_RESET_EXPIRE_IN=1h
-JWT_EXPIRE_IN=1h
+    JWT_SECRET=jwtsecret
+    JWT_RESET_EXPIRE_IN=1h
+    JWT_EXPIRE_IN=1h
 
-GOOGLE_APP_EMAIL=tu.email@gmail.com
-GOOGLE_APP_PW=abcd abcd abcd abcd
-''
+    GOOGLE_APP_EMAIL=tu.email@gmail.com
+    GOOGLE_APP_PW=abcd abcd abcd abcd
+    ```
 
-3. Abre tu navegador y visita `CLIENT_URL`.
-4. Registrate en el sitio
-5. La documentacion de swagger se encuentra en  `CLIENT_URL/docs`
+3. Abre tu navegador y visita `http://localhost:5000`.
+4. Regístrate en el sitio.
+5. La documentación de Swagger se encuentra en `http://localhost:5000/docs`.
 
 ## Contribución
 
