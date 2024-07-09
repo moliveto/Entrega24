@@ -19,7 +19,7 @@
                             <th class="text-wrap">Descripción</th>
                             <th class="text-end">Precio</th>
                             <th class="text-end">Stock</th>
-                            <th class="text-end">Acciones</th>
+                            <th class="w-10 text-center">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,18 +44,18 @@
                                         <i class="bi bi-trash"></i><span class="visually-hidden">Eliminar</span>
                                     </span>
                                     {{else}}
-                                        {{#if (not this.isOwner)}}
-                                        <form action="../cart/add" method="POST" class="d-flex">
-                                            <input type="hidden" name="pid" value="{{this.id}}" />
-                                            <input type="number" id="quantity-{{this.id}}"
-                                                class="form-control quantity-input" aria-label="cantidad de producto"
-                                                name="quantity" min="1" max="{{this.stock}}" value="1">
-                                            <button class="btn btn-success" type="submit">
-                                                <i class="bi bi-bag-plus"></i>
-                                                <span class="visually-hidden">Actualizar</span>
-                                            </button>
-                                        </form>
-                                        {{/if}}
+                                    {{#if (not this.isOwner)}}
+                                    <form action="../cart/add" method="POST" class="d-flex">
+                                        <input type="hidden" name="pid" value="{{this.id}}" />
+                                        <input type="number" id="quantity-{{this.id}}"
+                                            class="form-control quantity-input" aria-label="cantidad de producto"
+                                            name="quantity" min="1" max="{{this.stock}}" value="1">
+                                        <button class="btn btn-success" type="submit">
+                                            <i class="bi bi-bag-plus"></i>
+                                            <span class="visually-hidden">Actualizar</span>
+                                        </button>
+                                    </form>
+                                    {{/if}}
                                     {{/if}}
                                 </div>
                             </td>
