@@ -1,47 +1,44 @@
 import { chatsService } from "../../services/index.js";
+import MessageDTO from "../../dto/message.dto.js";
 
 const getMessages = async (req, res) => {
     res.render('pages/messagesIO', { notifications: req.flash(), use_chat: 1 });
 }
 
 const getMyMessages = async (req, res) => {
+    const user = req.user;
     let messages;
-    const allMessages = await chatsService.getMyMessages(req.user.email);
+    const allMessages = await chatsService.getMyMessages(user.email);
 
     if (allMessages.status === 'error') {
         error = allMessages.message;
         req.flash('error', error);
     } else {
-        messages = allMessages.data.map(m => new messageDTO(m));
+        messages = allMessages.map(m => new MessageDTO(m));
     }
 
     res.render('pages/messages', { messages, notifications: req.flash() });
 }
 
 const addMessage = async (req, res) => {
-    res.redirect('./chat');
+    const user = req.user;
+    const is_admin = user.role === 'admin';
     const { body, forEmail } = req.body;
-    console.log("🚀 ~ addMessage ~ req.body:", req.body)
-    if (req.user) {
-        const newMessage = {
-            type: req.user.is_admin ? 'system' : 'user',
-            email: req.user.is_admin ? forEmail : req.user.email,
-            body
-        }
-
-        if (!body || !newMessage.email) {
-            req.flash('error', `Todos los campos son necesarios para agregar un mensaje.`);
-        } else {
-            const answer = chatsService.addMessage(newMessage);
-            if (answer.status === 'error') {
-                req.flash(answer.status, answer.message);
-            } else {
-                req.flash(answer.status, `Mensaje enviado.`);
-            }
-        }
+    const newMessage = {
+        type: is_admin ? 'system' : 'user',
+        email: is_admin ? forEmail : req.user.email,
+        body
     }
-    else {
-        req.flash('error', `Solo usuarios registrados pueden publicar mensajes.`);
+
+    if (!body || !newMessage.email) {
+        req.flash('error', `Todos los campos son necesarios para agregar un mensaje.`);
+    } else {
+        const answer = chatsService.save(newMessage);
+        if (answer.status === 'error') {
+            req.flash(answer.status, answer.message);
+        } else {
+            req.flash(answer.status, `Mensaje enviado.`);
+        }
     }
 
     res.redirect('./chat');

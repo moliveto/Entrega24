@@ -13,8 +13,8 @@ export default class ChatRepository extends GenericRepository {
         return await this.dao.getMyMessages(email);
     }
 
-    async addMessage(message) {
-        return await this.dao.addMessage(message);
+    async save(message) {
+        return await this.dao.save(message);
     }
 
 }

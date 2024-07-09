@@ -5,8 +5,9 @@ const { Schema, model } = mongoose;
 
 const schema = new Schema(
     {
-        user: { type: String, required: true },
-        message: { type: String, required: true },
+        type: { type: String, default: 'user', enum: ['user', 'system'], require: true },
+        email: { type: String, require: true },
+        body: { type: String, require: true },
     },
     {
         timestamps: true, // Automatically adds timestamps for created/updated at

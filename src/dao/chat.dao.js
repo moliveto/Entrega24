@@ -15,19 +15,28 @@ export default class Chats {
         }
     }
 
-    async addMessage(message, user) {
+    async getMyMessages(email) {
         try {
-            const messageAdd = await this.model.create({ user: user, message: message })
+            const allMessages = await this.model.find({email : email}).lean()
+            return allMessages
+        } catch (error) {
+            throw Error(error)
+        }
+    }
+
+    async save(message) {
+        try {
+            const messageAdd = await this.model.create(message)
                 .then((res) => {
                     return res
                 })
                 .catch((error) => {
                     throw Error(error)
-                })
-
-            return messageAdd
+                });
+                return messageAdd;
         } catch (error) {
             throw Error(error)
         }
     }
+
 }
