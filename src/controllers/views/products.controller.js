@@ -4,8 +4,8 @@ import { validationResult } from 'express-validator';
 
 const products = async (req, res) => {
     const user = req.user;
-    const cartId = user.carts;
     const is_admin = user.role === 'admin';
+    const is_premium = user.role === 'premium';
 
     const { page = 1, limit = 10, sort, filter } = req.query;
     try {
@@ -24,13 +24,16 @@ const products = async (req, res) => {
             return res.json({ status: "failed", message: "LA PAGINA SELECCIONADA NO EXISTE" })
         }
 
-        var maxLength = 10;
+        //var maxLength = 10;
         const products = response.docs.map(doc => {
             return {
                 id: doc._id,
-                cart: cartId,
+                owner: doc.owner.toString(),
+                user: user.id,
+                isOwner: doc.owner.toString() === user.id,
                 name: doc.name,
-                description: doc.description.split(' ').slice(0, maxLength).join(' ') + '...',
+                // description: doc.description.split(' ').slice(0, maxLength).join(' ') + '...',
+                description: doc.description,
                 category: doc.category,
                 thumbnail: doc.thumbnail,
                 price: doc.price,
@@ -51,6 +54,7 @@ const products = async (req, res) => {
             hasNextPage: response.hasNextPage,
             hide_navigation: false,
             is_admin,
+            is_premium,
             notifications: req.flash()
         })
 
@@ -69,11 +73,9 @@ const getProductById = async (req, res) => {
     if (prodId) {
         const productDB = await productsService.getProductById(prodId);
         product = productDB.data;
-        // console.log("🚀 ~ getProductById ~ product:", product)
         if (product.status === 'error') {
             req.flash('error', `No se encontró producto con id: ${prodId}`);
         }
-        // product.id = product.data.id;
     } else {
         req.flash('error', 'El ID es requerido');
     }

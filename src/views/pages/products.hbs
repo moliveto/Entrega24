@@ -1,7 +1,7 @@
 <div class="row justify-content-center">
     <div class="col-12 col-lg-12">
         <h4>Productos:</h4>
-        {{#if is_admin}}
+        {{#if (or is_admin is_premium)}}
         <div class="text-end mb-3">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
                 Añadir producto
@@ -16,14 +16,15 @@
                         <tr class="">
                             <th class="text-center">Thumbnail</th>
                             <th class="text-start">Nombre</th>
-                            <th class="w-80">Descripción</th>
+                            <th class="text-wrap">Descripción</th>
                             <th class="text-end">Precio</th>
                             <th class="text-end">Stock</th>
-                            <th class="w-10 text-center">Acciones</th>
+                            <th class="text-end">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {{#each products}}
+                        {{log this}}
                         <tr class="align-middle">
                             <td class="text-center"><img src="{{this.thumbnail}}" alt="{{this.name}}"
                                     class="product-img"></td>
@@ -33,7 +34,7 @@
                             <td class="text-end">{{this.stock}}</td>
                             <td class="text-end">
                                 <div class="d-flex">
-                                    {{#if ../is_admin}}
+                                    {{#if (or ../is_admin this.isOwner)}}
                                     <a class="btn btn-primary ms-1" href="../products/update/{{this.id}}"
                                         role="button"><i class="bi bi-pen"></i><span
                                             class="visually-hidden">Actualizar</span></a>
@@ -43,16 +44,18 @@
                                         <i class="bi bi-trash"></i><span class="visually-hidden">Eliminar</span>
                                     </span>
                                     {{else}}
-                                    <form action="../cart/add" method="POST" class="d-flex">
-                                        <input type="hidden" name="pid" value="{{this.id}}" />
-                                        <input type="number" id="quantity-{{this.id}}"
-                                            class="form-control quantity-input" aria-label="cantidad de producto"
-                                            name="quantity" min="1" max="{{this.stock}}" value="1">
-                                        <button class="btn btn-success" type="submit">
-                                            <i class="bi bi-bag-plus"></i>
-                                            <span class="visually-hidden">Actualizar</span>
-                                        </button>
-                                    </form>
+                                        {{#if (not this.isOwner)}}
+                                        <form action="../cart/add" method="POST" class="d-flex">
+                                            <input type="hidden" name="pid" value="{{this.id}}" />
+                                            <input type="number" id="quantity-{{this.id}}"
+                                                class="form-control quantity-input" aria-label="cantidad de producto"
+                                                name="quantity" min="1" max="{{this.stock}}" value="1">
+                                            <button class="btn btn-success" type="submit">
+                                                <i class="bi bi-bag-plus"></i>
+                                                <span class="visually-hidden">Actualizar</span>
+                                            </button>
+                                        </form>
+                                        {{/if}}
                                     {{/if}}
                                 </div>
                             </td>

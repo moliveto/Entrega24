@@ -69,6 +69,12 @@ hbs.handlebars.registerHelper('dateFormat', function (timeFormat, value) {
 hbs.handlebars.registerHelper('ifEquals', function (arg1, arg2, options) {
   return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
 });
+hbs.handlebars.registerHelper('or', function(a, b) {
+  return a || b;
+});
+hbs.handlebars.registerHelper('not', function(a) {
+  return !a;
+});
 
 app.use(session({
   secret: 'secret',

@@ -81,10 +81,11 @@ a {
 }
 
 .quantity-select{
-    width: 64px;
+    width: 34px;
 }
+
 .quantity-input {
-    width: 64px;
+    width: 50px;
 }
 
 .message-wrapper{
