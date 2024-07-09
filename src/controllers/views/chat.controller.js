@@ -19,6 +19,7 @@ const getMyMessages = async (req, res) => {
 }
 
 const addMessage = async (req, res) => {
+    res.redirect('./chat');
     const { body, forEmail } = req.body;
     console.log("🚀 ~ addMessage ~ req.body:", req.body)
     if (req.user) {
