@@ -69,10 +69,10 @@ hbs.handlebars.registerHelper('dateFormat', function (timeFormat, value) {
 hbs.handlebars.registerHelper('ifEquals', function (arg1, arg2, options) {
   return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
 });
-hbs.handlebars.registerHelper('or', function(a, b) {
+hbs.handlebars.registerHelper('or', function (a, b) {
   return a || b;
 });
-hbs.handlebars.registerHelper('not', function(a) {
+hbs.handlebars.registerHelper('not', function (a) {
   return !a;
 });
 
@@ -112,15 +112,17 @@ httpServer.on('error', () => console.log(`Error: ${err}`));
 const io = new IO(httpServer);
 const messages = [];
 io.on('connection', socket => {
-    console.log("Nuevo cliente conectado: ", socket.id);
+  console.log('Un usuario se ha conectado', socket.id);
 
-    socket.on("message", (data) => {
-        messages.unshift(data);
-        io.emit("messageLogs", messages);
-    });
+  socket.on('message', (msg) => {
+    io.emit('message', msg);
+  });
 
-    socket.on("user-login", (usr) => {
-        socket.emit("messageLogs", messages)
-        socket.broadcast.emit("new-user", usr)
-    });
+  socket.on('disconnect', () => {
+    console.log('Un usuario se ha desconectado', socket.id);
+  });
+
+  socket.on("user-login", (usr) => {
+    socket.broadcast.emit("new-user", usr)
+  });
 });

@@ -1,8 +1,13 @@
 import { chatsService } from "../../services/index.js";
 import MessageDTO from "../../dto/message.dto.js";
 
+// const getMessages = async (req, res) => {
+//     res.render('pages/messagesIO', { notifications: req.flash(), use_chat: 1 });
+// }
+
 const getMessages = async (req, res) => {
-    res.render('pages/messagesIO', { notifications: req.flash(), use_chat: 1 });
+    const user = req.user;
+    res.render('pages/chat.hbs', { email: user.email, notifications: req.flash(), use_chat: 1 });
 }
 
 const getMyMessages = async (req, res) => {

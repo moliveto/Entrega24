@@ -93,14 +93,14 @@
         integrity="sha512-ykZ1QQr0Jy/4ZkvKuqWn4iF3lqPZyij9iRv6sGqLRdTPkY69YX6+7wvVGmsdBbiIfN/8OdsI7HABjvEok6ZopQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     {{#if use_chat}}
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/chat.js"></script>
     {{/if}}
-    <!-- <script src="/socket.io/socket.io.js"></script> <script src="./js/chat.js"></script> -->
-    <script>
+    {{!-- <script>
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-    </script>
+    </script> --}}
 </body>
 
 </html>
