@@ -25,24 +25,37 @@
 2. Crea un archivo local `.env.dev.local` con el siguiente contenido:
 
     ```env
+    # Environment variables for development
     ENV=dev
+    
+    # App configuration
     PORT=5000
     CLIENT_URL=http://localhost:5000
-
+    
+    # Database configuration
     PERSISTENCE=MONGO
     DB_HOST=localhost
     DB_PORT=27017
     DB_NAME=entrega23
-
-    API_KEY=yourapikey
-    API_SECRET=yoursecretkey
-
-    JWT_SECRET=jwtsecret
+    DB_URI=
+    
+    # Session Configuration
+    SESSION_SECRET=clave
+    SESSION_LIMIT=600000
+    
+    COOKIE_SECRET=clave
+    
+    # JWT configuration
+    JWT_SECRET=clave
     JWT_RESET_EXPIRE_IN=1h
     JWT_EXPIRE_IN=1h
-
-    GOOGLE_APP_EMAIL=tu.email@gmail.com
-    GOOGLE_APP_PW=abcd abcd abcd abcd
+    
+    # Mail configuration
+    GOOGLE_APP_EMAIL=email@gmail.com
+    GOOGLE_APP_PW=1234 1234 1234 1234
+    
+    GITHUB_CLIENT_ID=
+    GITHUB_CLIENT_SECRET=
     ```
 
 3. Abre tu navegador y visita `http://localhost:5000`.

@@ -13,15 +13,20 @@ las rutas basicas de productos y usuario tambien estan bastante completas.
 [x] Como te habre dicho por chat, es importante que se pueda completar el proceso de compra.
 [x] De paso, si en tu mongo atlas cargas un usuario admin con un correo falso para que pueda probar las demas funcionalidades con postman te lo agradeceria
 
-GET /api/users
+Nuevo feedback para completar la nota:
 
+[ ] github
+[ ] completar api
+[ ] documentar api
+[ ] mejorar los test ( no le di mucha bola porque el profe dijo que era una yapa )
+
+
+GET /api/users
 nombre, correo, rol
 
 DELETE /api/users
-
 limpiar los usuarios que no haya tenido conexion en los ultimos 2 dias
 puedes probar con los ultimos 40 minutos
 
 Crear una vista para modificar el rol de los usuarios solo debe ser accesible por el admin del ecomerce
-
 * modificar el endpoint que elimina productos para avisarle al usuario premium que el producto fue eliminado
