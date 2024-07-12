@@ -4,6 +4,7 @@ import { JWT_SECRET, JWT_RESET_EXPIRE_IN, CLIENT_URL } from "../config/config.js
 import { transporter } from "../utils/email.js"
 import { createHashValue, isValidPasswd } from "../utils/encrypt.js";
 import { validationResult } from 'express-validator';
+import UserDTO from "../dto/user.dto.js";
 
 const logon = async (req, res) => {
     const { email, password } = req.body;
@@ -16,7 +17,7 @@ const logon = async (req, res) => {
 }
 
 const logoutUser = async (req, res) => {
-    res.clearCookie('current')
+    res.clearCookie('jwt')
         .status(200)
         .json({
             message: 'You have logged out'
@@ -24,9 +25,10 @@ const logoutUser = async (req, res) => {
 }
 
 const loginUser = async (req, res) => {
-    const token = jsonwebtoken.sign(JSON.stringify(req.user), secret)
+    const userDto = new UserDTO(req.user);
+    const token = jsonwebtoken.sign(JSON.stringify(userDto), JWT_SECRET)
 
-    res.cookie("current", token, {
+    res.cookie("jwt", token, {
         httpOnly: true,
         secure: false,
         signed: true,

@@ -1,16 +1,17 @@
 import express from 'express';
-import { Server as IO } from "socket.io";
+import session from 'express-session';
+import sharedsession from "express-socket.io-session";
 import compression from "express-compression";
 import { engine, create } from "express-handlebars"
+import flash from 'connect-flash';
+import { Server as IO } from "socket.io";
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
-import flash from 'connect-flash';
-import session from 'express-session';
 import passport from "passport";
 import cors from "cors";
-import displayRoutes from "express-routemap";
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import displayRoutes from "express-routemap";
 import path from "path"
 import { fileURLToPath } from 'url';
 import { warnLogger } from './utils/logger.js';
@@ -20,11 +21,12 @@ import productsRouter from './routes/products.routes.js';
 import indexRoutes from './routes/view/index.routes.js';
 
 import initializePassport from "./config/pasport.config.js";
-import { PORT, PERSISTENCE, MONGO_URI, CLIENT_URL } from "./config/config.js";
+import { PORT, PERSISTENCE, MONGO_URI, CLIENT_URL, SESSION_SECRET, SESSION_LIMIT, COOKIE_SECRET } from "./config/config.js";
 import { swaggerOpts } from "./config/swagger.config.js";
 
 import moment from 'moment';
 moment.locale('es');
+import MessageDTO from "./dto/message.dto.js";
 
 const connection = mongoose.connect(MONGO_URI, {});
 
@@ -35,7 +37,7 @@ console.log(`dirname: ${__dirname}`);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieParser(COOKIE_SECRET));
 app.use(
   cors({
     origin: `${CLIENT_URL}`,
@@ -56,8 +58,18 @@ app.use(
   swaggerUi.setup(specs, { explorer: true })
 );
 
+// Configuración de express-session
+const expressSession = session({
+  secret: SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+  //cookie: { maxAge: SESSION_LIMIT }
+});
+app.use(expressSession);
+
 initializePassport();
 app.use(passport.initialize());
+app.use(passport.session());
 
 const hbs = create({});
 hbs.handlebars.registerHelper('timeFormat', function (timeFormat, value) {
@@ -76,11 +88,6 @@ hbs.handlebars.registerHelper('not', function (a) {
   return !a;
 });
 
-app.use(session({
-  secret: 'secret',
-  saveUninitialized: true,
-  resave: true
-}));
 app.use(flash());
 app.use(express.static(`${__dirname}/public`));
 app.engine('hbs', engine({
@@ -110,19 +117,47 @@ httpServer.on('error', () => console.log(`Error: ${err}`));
 
 // Socket
 const io = new IO(httpServer);
-const messages = [];
-io.on('connection', socket => {
-  console.log('Un usuario se ha conectado', socket.id);
 
-  socket.on('message', (msg) => {
-    io.emit('message', msg);
+// Compartir la sesión de express con socket.io
+io.use(sharedsession(expressSession, {
+  autoSave: true
+}));
+
+
+import { chatsService } from "./services/index.js";
+let ms = await chatsService.getAll();
+let messages = ms.data.map(m => new MessageDTO(m));
+io.on('connection', socket => {
+  //console.log('Un usuario se ha conectado', socket.id);
+
+  io.sockets.emit('messages', messages);
+
+  socket.on('message', async (msg) => {
+    const msgeDB = await chatsService.save(msg);
+    const msgDto = new MessageDTO(msgeDB);
+    messages.unshift(msgDto);
+    io.emit('message', msgDto);
   });
 
-  socket.on('disconnect', () => {
-    console.log('Un usuario se ha desconectado', socket.id);
+  socket.on('get-my-messages', async (email) => {
+    console.log("🚀 ~ socket.on ~ user:", email)
+    const allMessages = await chatsService.getMyMessages(email);
+    let messages = allMessages.map(m => new MessageDTO(m));
+    socket.emit('my-messages', messages);
+  });
+
+  socket.on('get-all-messages', async () => {
+    // let allMessages = await chatsService.getAll();
+    // let messagesDto = allMessages.data.map(m => new MessageDTO(m));
+    socket.emit('all-messages', messages); // Envía los mensajes solo al usuario que hizo la solicitud
   });
 
   socket.on("user-login", (usr) => {
-    socket.broadcast.emit("new-user", usr)
+    // console.log("🚀 ~ socket.on ~ usr:", usr)
+    socket.broadcast.emit("new-user", usr);
+  });
+
+  socket.on('disconnect', () => {
+    //console.log('Un usuario se ha desconectado', socket.id);
   });
 });

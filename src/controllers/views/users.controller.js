@@ -1,12 +1,27 @@
+import jsonwebtoken from "jsonwebtoken";
 import { usersService } from "../../services/index.js"
 import UsersModel from "../../models/users.model.js"
 import { isValidPasswd } from "../../utils/encrypt.js";
 import { generateJWT } from "../../utils/jwt.js";
 import { validationResult } from 'express-validator';
+import { JWT_SECRET } from "../../config/config.js";
 
 const login = async (req, res) => {
     var error = req.flash('error');
     return res.render("pages/login.hbs", { hide_navigation: true, error, notifications: req.flash() });
+};
+
+const loginUser = async (req, res) => {
+    const token = jsonwebtoken.sign(JSON.stringify(req.user), JWT_SECRET)
+  
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      secure: false,
+      signed: true,
+      maxAge: 1000 * 60 * 30 // 30 min
+    })
+
+    return res.redirect("/products");
 };
 
 const logon = async (req, res) => {
@@ -39,12 +54,12 @@ const logon = async (req, res) => {
         id: _id
     });
 
-    res.cookie('token', token, { httpOnly: true });
+    res.cookie('jwt', token, { httpOnly: true });
     res.redirect("/products");
 }
 
 const logout = async (req, res) => {
-    res.clearCookie('token');
+    res.clearCookie('jwt');
     res.redirect("/");
 }
 
@@ -55,6 +70,10 @@ const failLogin = async (req, res) => {
 
 const signup = async (req, res) => {
     return res.render("pages/signup.hbs", { hide_navigation: true, notifications: req.flash() });
+};
+
+const signupUser = async (req, res) => {
+    return res.redirect("/products");
 };
 
 const signon = async (req, res) => {
@@ -97,7 +116,7 @@ const signon = async (req, res) => {
             id: _id
         });
 
-        res.cookie('token', token, { httpOnly: true });
+        res.cookie('jwt', token, { httpOnly: true });
         res.redirect("/products");
     } catch (error) {
         console.error("Error during signon process:", error);
@@ -254,10 +273,12 @@ const deleteUser = async (req, res) => {
 
 export default {
     login,
+    loginUser,
     logon,
     logout,
     failLogin,
     signup,
+    signupUser,
     failSignup,
     signon,
     forgot,

@@ -8,7 +8,7 @@ function authMdw(role) {
       return next();
     }
 
-    passport.authenticate("current", { session: false }, (err, userJWT, info) => {
+    passport.authenticate("jwt", { session: false }, (err, userJWT, info) => {
       if (err) {
         return next(err)
       }
@@ -30,7 +30,7 @@ function authMdw(role) {
 }
 
 function productMdwPremium(req, res, next) {
-  passport.authenticate("current", { session: false }, async (err, userJWT, info) => {
+  passport.authenticate("jwt", { session: false }, async (err, userJWT, info) => {
     const currentRole = userJWT.role
     const userId = userJWT._id
     const isUserPremiumAndAdmin = currentRole === 'premium' || currentRole === "admin"
