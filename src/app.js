@@ -140,16 +140,13 @@ io.on('connection', socket => {
   });
 
   socket.on('get-my-messages', async (email) => {
-    console.log("🚀 ~ socket.on ~ user:", email)
     const allMessages = await chatsService.getMyMessages(email);
-    let messages = allMessages.map(m => new MessageDTO(m));
-    socket.emit('my-messages', messages);
+    const getMyMessages = allMessages.map(m => new MessageDTO(m));
+    socket.emit('my-messages', getMyMessages);
   });
 
   socket.on('get-all-messages', async () => {
-    // let allMessages = await chatsService.getAll();
-    // let messagesDto = allMessages.data.map(m => new MessageDTO(m));
-    socket.emit('all-messages', messages); // Envía los mensajes solo al usuario que hizo la solicitud
+    socket.emit('all-messages', messages);
   });
 
   socket.on("user-login", (usr) => {
