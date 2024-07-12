@@ -10,7 +10,7 @@ const localStrategy = passportLocal.Strategy;
 
 import { usersService } from "../services/index.js"
 import { isValidPasswd } from "../utils/encrypt.js";
-import { JWT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "../config/config.js";
+import { CLIENT_URL, JWT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "../config/config.js";
 
 import { ROLES } from "../constants/role.constants.js"
 
@@ -93,32 +93,39 @@ const initializePassport = () => {
       {
         clientID: GITHUB_CLIENT_ID,
         clientSecret: GITHUB_CLIENT_SECRET,
-        callbackURL: "http://localhost:3000/api/session/github/callback",
+        callbackURL: `${CLIENT_URL}/github/callback`,
       },
       async (accessToken, refreshToken, profile, done) => {
-        console.log(
-          "🚀 ~ file: passport.config.js:17 ~ async ~ profile:",
-          profile
-        );
         try {
-          let user = await userModel.findOne({ email: profile._json?.email });
-          if (!user) {
-            let addNewUser = {
-              first_name: profile._json.name,
-              last_name: "",
-              email: profile._json?.email,
-              age: 0,
-              password: "",
-            };
-            let newUser = await userModel.create(addNewUser);
-            done(null, newUser);
-          } else {
-            // ya existia el usuario
+
+          // console.log(profile._json);
+          const email = profile._json.email;
+          const user = await usersService.getUserByEmail(email);
+
+          if (user) {
+            // Ya existe en la DB
             done(null, user);
           }
-        } catch (error) {
-          console.log("🚀 ~ file: passport.config.js:39 ~ error:", error);
+          else {
+            // Guardar en la DB
+            const fullName = profile._json.name.split(' ');
+            const last_name = fullName.pop();
+            const first_name = fullName.join(' ');
+            const avatar_url = profile._json.avatar_url;
+            let addNewUser = {
+              first_name,
+              last_name,
+              email,
+              age: 0,
+              password: "",
+              avatar: avatar_url,
+            };
+            let newUser = await usersService.createUser(addNewUser);
+            done(null, newUser);
+          }
 
+        } catch (error) {
+          console.log("🚀 ~ error:", error)
           done(error);
         }
       }
@@ -131,61 +138,25 @@ const initializePassport = () => {
     if (req && req.cookies) {
       token = req.signedCookies['jwt']
     }
+    // console.log("🚀 ~ cookieExtractor ~ token:", token)
 
     return token
   }
 
-  passport.use('jwt', new JWTStrategy({
-    jwtFromRequest: cookieExtractor,
-    secretOrKey: JWT_SECRET
-  }, async (jwtPayload, done) => {
+  passport.use(
+    'jwt', 
+    new JWTStrategy({
+      jwtFromRequest: cookieExtractor,
+      secretOrKey: JWT_SECRET
+    }, 
+    async (jwtPayload, done) => {
     try {
-      done(null, jwtPayload)
+      done(null, jwtPayload.user)
     } catch (error) {
+      console.log("🚀 ~ initializePassport ~ error:", error)
       done(error)
     }
   }))
-
-  // passport.use(
-  //   'current',
-  //   new JWTStrategy(
-  //     {
-  //       jwtFromRequest: extractJwtFromCookie,
-  //       secretOrKey: JWT_SECRET,
-  //     },
-  //     async (payload, done) => {
-  //       //console.log("jwtPayload:", payload);
-  //       const user = payload.user;
-  //       //console.log(user);
-  //       if (!user) {
-  //         return done(null, false);
-  //       }
-  //       return done(null, user);
-  //     }
-  //   )
-  // );
-
-  // passport.use(
-  //   "jwt",
-  //   new JWTStrategy(
-  //     {
-  //       jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-  //       secretOrKey: JWT_SECRET,
-  //     },
-  //     async (jwtPayload, done) => {
-  //       console.log("jwtPayload:", jwtPayload);
-
-  //       try {
-  //         if (ROLES.includes(jwtPayload.role)) {
-  //           return done(null, jwtPayload);
-  //         }
-  //         return done(null, jwtPayload);
-  //       } catch (error) {
-  //         return done(error);
-  //       }
-  //     }
-  //   )
-  // );
 
   passport.serializeUser((user, done) => {
     done(null, user._id);
@@ -214,13 +185,5 @@ const checkAdmin = (req, res, next) => {
     res.redirect('/');
   }
 }
-
-// function extractJwtFromCookie(req) {
-//   const cookies = req.cookies;
-//   if (!cookies || !cookies.token) {
-//     return null;
-//   }
-//   return cookies.token;
-// }
 
 export default initializePassport;

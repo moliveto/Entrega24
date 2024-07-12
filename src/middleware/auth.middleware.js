@@ -64,6 +64,70 @@ function productMdwPremium(req, res, next) {
   })(req, res, next)
 }
 
+export const authorizationStrategy = (strategy) => {
+  return async (req, res, next) => {
+    passport.authenticate(strategy, function (err, user, info) {
+      if (err) return next(err);
+      if (!user) {
+        return res.status(401).send({
+          error: info.messages ? info.messages : info.toString(),
+        });
+      }
+      req.user = user;
+      next();
+    })(req, res, next);
+  };
+};
+
+export const authorizationRol = (validRoles) => {
+  return async (req, res, next) => {
+    const user = req.user;
+
+    if (!user) return res.status(401).send({ error: "No autorizado" });
+
+    if (validRoles.includes(user.user.roles)) {
+      next();
+    } else {
+      res.status(403).send({ error: "Usuario no autorizado" });
+    }
+  };
+};
+
+export const authorizationProduct = async (req, res, next) => {
+  const id = req.params.pid;
+  const { email, roles } = req.user.user;
+
+  const product = await productService.getProductById(id);
+
+  if (roles === "admin") {
+    console.log("Producto eliminado por Administrador");
+    return next();
+  } else
+    if (product.owner === email && roles === "premium") {
+      console.log("Producto eliminado por usuario Premium");
+      return next();
+    } else {
+      console.log("No tienes permisos");
+      res.status(403).send({ status: "No tienes permisos" });
+    }
+};
+
+export const authorizationAddToCart = async (req, res, next) => {
+  const id = req.params.pid;
+  const { email, roles } = req.user.user;
+
+  const product = await productService.getProductById(id);
+
+  if (roles === "premium" && product.owner === email) {
+    console.log("User Premium no puede agregar su propio producto al carrito");
+    return res
+      .status(403)
+      .send({ status: "No puedes agregar tu propio producto al carrito." });
+  }
+
+  next();
+};
+
 export {
   authMdw as handlePolicies,
   productMdwPremium,

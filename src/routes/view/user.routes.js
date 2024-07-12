@@ -23,19 +23,19 @@ router.get('/faillogin', userController.failLogin);
 // Signup
 router.get('/signup', userAuthAndSetup, userController.signup);
 //router.post('/signup', userAuthAndSetup, uploaderAvatar.single('avatar'), ValidateSignup(), userController.signon);
-router.post('/signup', uploaderAvatar.single('avatar'), ValidateSignup(), function(req, res, next){
-    let errors = validationResult(req); 
-    if(!errors.isEmpty()){
-        res.render("pages/signup.hbs",{errors: errors.array()});
-    }else{
-        passport.authenticate('signup', 
+router.post('/signup', uploaderAvatar.single('avatar'), ValidateSignup(), function (req, res, next) {
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.render("pages/signup.hbs", { errors: errors.array() });
+    } else {
+        passport.authenticate('signup',
             {
                 successRedirect: '/products',
                 successFlash: true,
-                failureRedirect: '/failsignup',  
+                failureRedirect: '/failsignup',
                 failureFlash: true,
                 session: false,
-            })(req,res,next);
+            })(req, res, next);
     }
 
 }, userController.signupUser);
@@ -55,16 +55,20 @@ router.get('/updatepassword/:token', userAuthAndSetup, userController.updatepass
 router.get("/github", passport.authenticate("github", { scope: ["user:email"] }),
     async (req, res) => { }
 );
-router.get("/github/callback",
-    passport.authenticate("github", { failureRedirect: "/login" }),
-    async (req, res) => {
-        try {
-            req.session.user = req.user;
-            res.redirect("/profile");
-        } catch (error) {
-            console.log("🚀 ~ file: session.routes.js:115 ~ error:", error);
-        }
-    }
-);
+
+// router.get("/github/callback",
+//     passport.authenticate("github", { failureRedirect: "/login" }),
+//     async (req, res) => {
+//         try {
+//             req.session.user = req.user;
+//             res.redirect("/profile");
+//         } catch (error) {
+//             console.log("🚀 ~ file: session.routes.js:115 ~ error:", error);
+//         }
+//     }
+// );
+
+//Iniciar session Github
+router.get("/github/callback", passport.authenticate("github", { failureRedirect: "/login" }), userController.loginGithub);
 
 export default router;

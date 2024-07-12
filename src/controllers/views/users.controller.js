@@ -5,6 +5,8 @@ import { isValidPasswd } from "../../utils/encrypt.js";
 import { generateJWT } from "../../utils/jwt.js";
 import { validationResult } from 'express-validator';
 import { JWT_SECRET } from "../../config/config.js";
+import { generateToken } from "../../utils/utils.js";
+import UserDTO from "../../dto/user.dto.js";
 
 const login = async (req, res) => {
     var error = req.flash('error');
@@ -12,17 +14,40 @@ const login = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-    const token = jsonwebtoken.sign(JSON.stringify(req.user), JWT_SECRET)
-  
+    const user = req.user;
+    await usersService.updateLastConnection(user._id, { last_connection: Date.now() });
+    const userDto = new UserDTO(user);
+
+    const token = generateToken(userDto);
+    // console.log("🚀 ~ loginUser ~ token:", token)
+
     res.cookie("jwt", token, {
-      httpOnly: true,
-      secure: false,
-      signed: true,
-      maxAge: 1000 * 60 * 30 // 30 min
+        httpOnly: true,
+        secure: false,
+        signed: true,
+        maxAge: 1000 * 60 * 30 // 30 min
     })
 
     return res.redirect("/products");
 };
+
+const loginGithub = async (req, res) => {
+    const user = req.user;
+    await usersService.updateLastConnection(user._id, { last_connection: Date.now() });
+    const userDto = new UserDTO(user);
+
+    const token = generateToken(userDto);
+    // console.log("🚀 ~ loginGithub ~ token:", token)
+
+    res.cookie("jwt", token, {
+        httpOnly: true,
+        secure: false,
+        signed: true,
+        maxAge: 1000 * 60 * 30 // 30 min
+    });
+
+    res.redirect("/products");
+}
 
 const logon = async (req, res) => {
     const { email, password } = req.body;
@@ -274,6 +299,7 @@ const deleteUser = async (req, res) => {
 export default {
     login,
     loginUser,
+    loginGithub,
     logon,
     logout,
     failLogin,

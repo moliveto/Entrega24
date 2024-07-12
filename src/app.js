@@ -71,6 +71,7 @@ initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Helpers de Handlebars
 const hbs = create({});
 hbs.handlebars.registerHelper('timeFormat', function (timeFormat, value) {
   return moment(value).format(timeFormat).trim();
@@ -88,7 +89,9 @@ hbs.handlebars.registerHelper('not', function (a) {
   return !a;
 });
 
+// Configuración de flash
 app.use(flash());
+// Configuración de handlebars
 app.use(express.static(`${__dirname}/public`));
 app.engine('hbs', engine({
   extname: '.hbs',
@@ -150,7 +153,6 @@ io.on('connection', socket => {
   });
 
   socket.on("user-login", (usr) => {
-    // console.log("🚀 ~ socket.on ~ usr:", usr)
     socket.broadcast.emit("new-user", usr);
   });
 
