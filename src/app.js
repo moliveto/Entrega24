@@ -40,9 +40,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(COOKIE_SECRET));
 app.use(
   cors({
-    origin: `${CLIENT_URL}`,
+    origin: [
+      "http://localhost:5000/",
+      "https://entrega24-production.up.railway.app/",
+      `${CLIENT_URL}`
+    ],
+    // origin: `${CLIENT_URL}`,
     // origin: "*",
-    methods: ["GET", "PUT", "DELETE", "POST"],
+    methods: ["GET", "HEAD", "PUT", "PATCH", "DELETE", "POST"],
   })
 );
 app.use(

@@ -10,7 +10,7 @@ const localStrategy = passportLocal.Strategy;
 
 import { usersService } from "../services/index.js"
 import { isValidPasswd } from "../utils/encrypt.js";
-import { CLIENT_URL, JWT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "../config/config.js";
+import { CLIENT_URL, JWT_SECRET, GITHUB_CALLBACK_URL, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "../config/config.js";
 
 import { ROLES } from "../constants/role.constants.js"
 
@@ -93,7 +93,7 @@ const initializePassport = () => {
       {
         clientID: GITHUB_CLIENT_ID,
         clientSecret: GITHUB_CLIENT_SECRET,
-        callbackURL: `${CLIENT_URL}/github/callback`,
+        callbackURL: GITHUB_CALLBACK_URL,
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
