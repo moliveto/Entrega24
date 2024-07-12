@@ -100,7 +100,7 @@ const forgotPassword = async (req, res) => {
         subject: 'Reset Account Password Link',
         html: `
         <h3>Por favor, ingresa al link para cambiar tu contraseña</h3>
-        <p>${CLIENT_URL}/updatePassword/${token}"</p>
+        <p>${CLIENT_URL}/updatePassword/${token}</p>
         `,
     };
 
