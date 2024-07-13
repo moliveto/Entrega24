@@ -1,12 +1,11 @@
 import { Router } from 'express';
 import chatController from '../../controllers/views/chat.controller.js';
-import { handlePolicies } from '../../middleware/auth.middleware.js';
-import userAuthAndSetup from '../../middleware/userAuthAndSetup.js';
+import { authorizationMdw, authorizationMdwRol } from '../../middleware/auth.middleware.js';
 
 const router = Router();
 
-router.get('/', handlePolicies(["public", "user", "admin", "premium"]), userAuthAndSetup, chatController.getMessages);
-//router.get('/personal', handlePolicies(["public", "user", "admin", "premium"]), userAuthAndSetup, chatController.getMyMessages);
-//router.post('/', handlePolicies(["public", "user", "admin", "premium"]), userAuthAndSetup, chatController.addMessage);
+router.get('/', authorizationMdw("jwt"), authorizationMdwRol(["public", "user", "admin", "premium"]), chatController.getMessages);
+//router.get('/personal', authorizationMdw("jwt"), authorizationMdwRol(["public", "user", "admin", "premium"]), userAuthAndSetup, chatController.getMyMessages);
+//router.post('/', authorizationMdw("jwt"), authorizationMdwRol(["public", "user", "admin", "premium"]), userAuthAndSetup, chatController.addMessage);
 
 export default router;

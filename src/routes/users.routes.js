@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import usersController from '../controllers/users.controller.js';
-import { handlePolicies } from '../middleware/auth.middleware.js';
+import { authorizationMdw, authorizationMdwRol } from '../middleware/auth.middleware.js';
 import uploader from '../utils/uploader.js';
 import { ValidateSignup } from '../middleware/validator.js';
 
@@ -56,7 +56,7 @@ const router = Router();
  *       '404':
  *         description: Recurso no encontrado
  */
-router.get('/', usersController.getAllUsers);
+router.get('/', authorizationMdw("jwt"), authorizationMdwRol(["admin"]), usersController.getAllUsers);
 
 /**
  * @swagger
@@ -78,7 +78,7 @@ router.get('/', usersController.getAllUsers);
  *       '404':
  *         description: Recurso no encontrado
  */
-router.post('/', ValidateSignup(), usersController.createUser);
+router.post('/', authorizationMdw("jwt"), authorizationMdwRol(["admin"]), ValidateSignup(), usersController.createUser);
 
 /**
  * @swagger
@@ -101,7 +101,7 @@ router.post('/', ValidateSignup(), usersController.createUser);
  *       '404':
  *         description: Recurso no encontrado
  */
-router.get('/:uid', usersController.getUser);
+router.get('/:uid', authorizationMdw("jwt"), authorizationMdwRol(["admin"]), usersController.getUser);
 
 /**
  * @swagger
@@ -130,7 +130,7 @@ router.get('/:uid', usersController.getUser);
  *       '404':
  *         description: Recurso no encontrado
  */
-router.put('/:uid', usersController.updateUser);
+router.put('/:uid', authorizationMdw("jwt"), authorizationMdwRol(["admin"]), usersController.updateUser);
 
 /**
  * @swagger
@@ -153,7 +153,7 @@ router.put('/:uid', usersController.updateUser);
  *       '404':
  *         description: Recurso no encontrado
  */
-router.delete('/:uid', usersController.deleteUser);
+router.delete('/:uid', authorizationMdw("jwt"), authorizationMdwRol(["admin"]), usersController.deleteUser);
 
 /**
 * @swagger
@@ -288,7 +288,7 @@ router.post("/updatePassword", usersController.updatePassword);
  *                   type: string
  *                   example: An error occurred while upgrading the user.
  */
-router.post("/premium/:uid", handlePolicies(['admin']), usersController.togglePremiumCtrl)
+router.post("/premium/:uid", authorizationMdw("jwt"), authorizationMdwRol(['admin']), usersController.togglePremiumCtrl)
 
 /**
  * @swagger
@@ -365,6 +365,6 @@ router.post("/premium/:uid", handlePolicies(['admin']), usersController.togglePr
  *     produces:
  *       - application/json
  */
-router.post("/upload/:uid", uploader.single('documentation'), usersController.uploadDocumentCtrl)
+router.post("/upload/:uid", authorizationMdw("jwt"), authorizationMdwRol(['admin', 'user', 'premium', 'public']), uploader.single('documentation'), usersController.uploadDocumentCtrl)
 
 export default router;

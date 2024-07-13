@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { handlePolicies, productMdwPremium } from '../middleware/auth.middleware.js';
+import { authorizationMdw, authorizationMdwRol } from '../middleware/auth.middleware.js';
 import { createProductDTO } from "../dto/product.dto.js";
 import productsController from '../controllers/products.controller.js';
 
@@ -21,7 +21,7 @@ const router = Router();
  *               items:
  *                 $ref: '#/components/schemas/Product'
  */
-router.get('/', handlePolicies(['admin', 'user', 'premium', 'public']), productsController.getAllProducts);
+router.get('/', authorizationMdw("jwt"), authorizationMdwRol(['admin', 'user', 'premium', 'public']), productsController.getAllProducts);
 
 /**
  * @swagger
@@ -45,7 +45,7 @@ router.get('/', handlePolicies(['admin', 'user', 'premium', 'public']), products
  *       500:
  *         description: Some server error
  */
-router.post('/', handlePolicies(['admin', 'premium']), createProductDTO, productsController.createProduct);
+router.post('/', authorizationMdw("jwt"), authorizationMdwRol(['admin', 'premium']), createProductDTO, productsController.createProduct);
 
 /**
  * @swagger
@@ -70,7 +70,7 @@ router.post('/', handlePolicies(['admin', 'premium']), createProductDTO, product
  *       404:
  *         description: The product was not found
  */
-router.get('/:uid', handlePolicies('public'), productsController.getProduct);
+router.get('/:uid', authorizationMdw("jwt"), authorizationMdwRol('public'), productsController.getProduct);
 
 /**
  * @swagger
@@ -103,7 +103,7 @@ router.get('/:uid', handlePolicies('public'), productsController.getProduct);
  *       500:
  *         description: Some error happened in server
  */
-router.put('/:uid', productMdwPremium, productsController.updateProduct);
+router.put('/:uid', productsController.updateProduct);
 
 /**
  * @swagger
@@ -126,7 +126,7 @@ router.put('/:uid', productMdwPremium, productsController.updateProduct);
  *       500:
  *         description: Some error happened in server
  */
-router.delete('/:uid', productMdwPremium, productsController.deleteProduct);
+router.delete('/:uid', productsController.deleteProduct);
 
 /**
  * @swagger
@@ -141,7 +141,7 @@ router.delete('/:uid', productMdwPremium, productsController.deleteProduct);
  *       500:
  *         description: Error occurred while seeding the database
  */
-router.get('/seed', handlePolicies(['admin']), productsController.Seed);
+router.get('/seed', authorizationMdw("jwt"), authorizationMdwRol(['admin']), productsController.Seed);
 
 export default router;
 

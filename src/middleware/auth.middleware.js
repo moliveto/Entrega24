@@ -1,99 +1,114 @@
 import passport from "passport";
 import { productsService } from "../services/index.js"
 
-function authMdw(role) {
-  return (req, res, next) => {
+// function authMdw(role) {
+//   return (req, res, next) => {
 
-    if (role.length === 1 && role[0] === "public") {
-      return next();
-    }
+//     if (role.length === 1 && role[0] === "public") {
+//       return next();
+//     }
 
-    passport.authenticate("jwt", { session: false }, (err, userJWT, info) => {
-      if (err) {
-        return next(err)
-      }
+//     passport.authenticate("jwt", { session: false }, (err, userJWT, info) => {
+//       if (err) {
+//         return next(err)
+//       }
 
-      if (!userJWT) {
-        req.flash('error', `Acceso denegado. Token inválido o expirado.`);
-        return res.redirect("/");
-      }
+//       if (!userJWT) {
+//         req.flash('error', `Acceso denegado. Token inválido o expirado.`);
+//         return res.redirect("/");
+//       }
 
-      const currentRole = userJWT.role
-      if (!role.includes(currentRole)) {
-        req.flash('error', `Acceso denegado. Rol no autorizado.`);
-        return res.redirect("/");
-      }
-      req.user = userJWT
-      return next()
-    })(req, res, next)
-  }
-}
+//       const currentRole = userJWT.role
+//       if (!role.includes(currentRole)) {
+//         req.flash('error', `Acceso denegado. Rol no autorizado.`);
+//         return res.redirect("/");
+//       }
+//       req.user = userJWT
+//       return next()
+//     })(req, res, next)
+//   }
+// }
 
-function productMdwPremium(req, res, next) {
-  passport.authenticate("jwt", { session: false }, async (err, userJWT, info) => {
-    const currentRole = userJWT.role
-    const userId = userJWT._id
-    const isUserPremiumAndAdmin = currentRole === 'premium' || currentRole === "admin"
-    const product = await productsService.getProductById(req.params.pid);
-    const productIsFromOwner = product.owner === userId
+// function productMdwPremium(req, res, next) {
+//   passport.authenticate("jwt", { session: false }, async (err, userJWT, info) => {
+//     const currentRole = userJWT.role
+//     const userId = userJWT._id
+//     const isUserPremiumAndAdmin = currentRole === 'premium' || currentRole === "admin"
+//     const product = await productsService.getProductById(req.params.pid);
+//     const productIsFromOwner = product.owner === userId
 
-    if (err) {
-      return next(err)
-    }
+//     if (err) {
+//       return next(err)
+//     }
 
-    if (!userJWT) {
-      return res
-        .status(401)
-        .send({ message: "Acceso denegado. Token inválido o expirado." });
-    }
+//     if (!userJWT) {
+//       return res
+//         .status(401)
+//         .send({ message: "Acceso denegado. Token inválido o expirado." });
+//     }
 
-    if (!isUserPremiumAndAdmin) {
-      return res
-        .status(401)
-        .send({ message: "Acceso denegado. No tienes permiso" });
-    }
+//     if (!isUserPremiumAndAdmin) {
+//       return res
+//         .status(401)
+//         .send({ message: "Acceso denegado. No tienes permiso" });
+//     }
 
-    if (currentRole === 'premium' && !productIsFromOwner) {
-      return res
-        .status(401)
-        .send({ message: "Acceso denegado. Este producto no te pertenece" });
-    }
+//     if (currentRole === 'premium' && !productIsFromOwner) {
+//       return res
+//         .status(401)
+//         .send({ message: "Acceso denegado. Este producto no te pertenece" });
+//     }
 
-    req.user = userJWT
-    return next()
-  })(req, res, next)
-}
+//     req.user = userJWT
+//     return next()
+//   })(req, res, next)
+// }
 
-export const authorizationStrategy = (strategy) => {
+export const authorizationMdw = (strategy) => {
   return async (req, res, next) => {
     passport.authenticate(strategy, function (err, user, info) {
-      if (err) return next(err);
+      if (err) { 
+        console.log("🚀 ~ err:", err)
+        req.flash('error', err.message);
+        return next(err);
+      }
+
       if (!user) {
+        req.flash('error', `Acceso denegado. Token inválido o expirado.`);
         return res.status(401).send({
           error: info.messages ? info.messages : info.toString(),
         });
       }
+
+      res.locals.email = user?.email ? user.email : null;
+      res.locals.avatar = user?.avatar ? user.avatar : 'default-user.png';
+      res.locals.is_admin = user?.role === 'admin';
+
       req.user = user;
       next();
     })(req, res, next);
   };
 };
 
-export const authorizationRol = (validRoles) => {
+export const authorizationMdwRol = (validRoles) => {
   return async (req, res, next) => {
     const user = req.user;
 
-    if (!user) return res.status(401).send({ error: "No autorizado" });
+    if (!user) {
+      req.flash('error', `Acceso denegado. Token inválido o expirado.`);
+      return res.status(401).send({ error: "No autorizado" });
+    }
 
-    if (validRoles.includes(user.user.roles)) {
-      next();
-    } else {
+    if (!validRoles.includes(user.role)) {
+      req.flash('error', `Acceso denegado. Rol no autorizado.`);
       res.status(403).send({ error: "Usuario no autorizado" });
     }
+
+    next();
   };
 };
 
-export const authorizationProduct = async (req, res, next) => {
+export const authorizationMdwProduct = async (req, res, next) => {
   const id = req.params.pid;
   const { email, roles } = req.user.user;
 
@@ -112,7 +127,7 @@ export const authorizationProduct = async (req, res, next) => {
     }
 };
 
-export const authorizationAddToCart = async (req, res, next) => {
+export const authorizationMdwAddToCart = async (req, res, next) => {
   const id = req.params.pid;
   const { email, roles } = req.user.user;
 
@@ -128,7 +143,7 @@ export const authorizationAddToCart = async (req, res, next) => {
   next();
 };
 
-export {
-  authMdw as handlePolicies,
-  productMdwPremium,
-}
+// export {
+//   authMdw as handlePolicies,
+//   productMdwPremium,
+// }
